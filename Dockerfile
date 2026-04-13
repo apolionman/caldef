@@ -13,6 +13,9 @@ COPY . .
 # Persistent volume mount point for the SQLite database
 RUN mkdir -p /data
 
+# Make entrypoint executable
+RUN chmod +x entrypoint.sh
+
 # Environment defaults (override in docker-compose or at runtime)
 ENV DATABASE_PATH=/data/caldef.db \
     FLASK_APP=app.py \
@@ -21,11 +24,6 @@ ENV DATABASE_PATH=/data/caldef.db \
 
 EXPOSE 5050
 
-# Gunicorn: 2 workers, 120 s timeout (AI calls can be slow)
-CMD ["gunicorn", \
-     "--bind", "0.0.0.0:5050", \
-     "--workers", "2", \
-     "--timeout", "120", \
-     "--access-logfile", "-", \
-     "--error-logfile", "-", \
-     "app:app"]
+# entrypoint.sh runs init_db once before Gunicorn starts,
+# guaranteeing tables exist before any worker handles a request
+ENTRYPOINT ["./entrypoint.sh"]

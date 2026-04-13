@@ -210,14 +210,17 @@ document.querySelectorAll('.md-content[data-content]').forEach(el => {
 
 async function regenPlan() {
   const btn = document.getElementById('regen-btn');
-  btn.textContent = 'Generating...';
+  const content = document.getElementById('plan-content');
+  btn.textContent = 'Generating…';
   btn.disabled = true;
+  content.innerHTML = '<span style="color:var(--text-3);font-style:italic">Your AI coach is writing your plan — this can take up to a minute…</span>';
   try {
     const res = await fetch('/api/regenerate-plan', { method: 'POST' });
     const data = await res.json();
-    document.getElementById('plan-content').innerHTML = marked.parse(data.plan);
-  } catch {
-    alert('Could not regenerate plan. Please try again.');
+    if (data.error) throw new Error(data.error);
+    content.innerHTML = marked.parse(data.plan);
+  } catch (e) {
+    content.innerHTML = '<span style="color:var(--red)">Could not generate plan — ' + (e.message || 'please try again') + '</span>';
   }
   btn.textContent = 'Regenerate';
   btn.disabled = false;

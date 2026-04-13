@@ -3,7 +3,11 @@ import requests
 
 AI_ENDPOINT = "http://192.168.70.48:8000/v1/chat/completions"
 AI_MODEL = "nvidia/Nemotron-Cascade-2-30B-A3B"
-TIMEOUT = 60
+
+# Per-call timeouts (seconds).  Plan generation is the longest prompt.
+TIMEOUT_CHAT     = 120
+TIMEOUT_FEEDBACK = 120
+TIMEOUT_PLAN     = 300
 
 # Phrases that indicate the model leaked its chain-of-thought reasoning
 _THINKING_PREFIXES = (
@@ -32,7 +36,7 @@ def _strip_thinking(text: str) -> str:
     return text
 
 
-def _call_ai(messages: list, system_prompt: str = None) -> str:
+def _call_ai(messages: list, system_prompt: str = None, timeout: int = TIMEOUT_CHAT) -> str:
     all_messages = []
     if system_prompt:
         all_messages.append({"role": "system", "content": system_prompt})
@@ -43,7 +47,7 @@ def _call_ai(messages: list, system_prompt: str = None) -> str:
             AI_ENDPOINT,
             headers={"Content-Type": "application/json"},
             json={"model": AI_MODEL, "messages": all_messages, "stream": False},
-            timeout=TIMEOUT,
+            timeout=timeout,
         )
         resp.raise_for_status()
         raw = resp.json()["choices"][0]["message"]["content"]
@@ -104,7 +108,7 @@ def generate_plan(profile: dict) -> str:
         f"Keep it honest, encouraging, and achievable. Use clear sections with short headings."
     )
 
-    return _call_ai([{"role": "user", "content": user_msg}], system)
+    return _call_ai([{"role": "user", "content": user_msg}], system, timeout=TIMEOUT_PLAN)
 
 
 def get_daily_feedback(profile: dict, username: str, consumed: int, logs: list) -> str:
@@ -140,7 +144,7 @@ def get_daily_feedback(profile: dict, username: str, consumed: int, logs: list) 
             f"Give honest, kind feedback and one practical suggestion for the rest of the day."
         )
 
-    return _call_ai([{"role": "user", "content": msg}], system)
+    return _call_ai([{"role": "user", "content": msg}], system, timeout=TIMEOUT_FEEDBACK)
 
 
 def chat_with_ai(profile: dict, username: str, history: list, user_message: str,
@@ -173,4 +177,4 @@ def chat_with_ai(profile: dict, username: str, history: list, user_message: str,
     messages = [{"role": m["role"], "content": m["content"]} for m in history[-10:]]
     messages.append({"role": "user", "content": user_message})
 
-    return _call_ai(messages, system)
+    return _call_ai(messages, system, timeout=TIMEOUT_CHAT)

@@ -1,0 +1,265 @@
+{% extends "base.html" %}
+{% block title %}History — CalDef{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">History</h1>
+      <p class="page-subtitle">Your nutrition journey over time</p>
+    </div>
+    <div class="range-pills">
+      <button class="range-pill active" onclick="loadData(7, this)">7D</button>
+      <button class="range-pill" onclick="loadData(14, this)">14D</button>
+      <button class="range-pill" onclick="loadData(30, this)">30D</button>
+    </div>
+  </div>
+
+  <!-- Stats Row -->
+  <div class="stats-row" id="stats-row">
+    <div class="stat-card card">
+      <span class="stat-val" id="avg-cal">—</span>
+      <span class="stat-key">Avg Daily kcal</span>
+    </div>
+    <div class="stat-card card">
+      <span class="stat-val" id="days-logged">—</span>
+      <span class="stat-key">Days Logged</span>
+    </div>
+    <div class="stat-card card">
+      <span class="stat-val" id="days-target">—</span>
+      <span class="stat-key">Days On Target</span>
+    </div>
+    <div class="stat-card card">
+      <span class="stat-val" id="best-day">—</span>
+      <span class="stat-key">Best Streak</span>
+    </div>
+  </div>
+
+  <!-- Calorie Chart -->
+  <div class="card">
+    <h3 class="card-title">Daily Calories vs Target</h3>
+    <div class="chart-wrap">
+      <canvas id="calorieHistoryChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Weight Log -->
+  <div class="card">
+    <div class="card-header-row">
+      <h3 class="card-title">Weight Log</h3>
+      <button class="btn btn-ghost btn-sm" onclick="toggleWeightForm()">+ Log Weight</button>
+    </div>
+    <div id="weight-form" style="display:none" class="inline-form">
+      <input class="form-input" type="number" id="weight-input" placeholder="e.g. 72.5" min="30" max="300" step="0.1" />
+      <button class="btn btn-primary btn-sm" onclick="logWeight()">Save</button>
+    </div>
+    <div class="chart-wrap chart-sm">
+      <canvas id="weightChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Food Log Table -->
+  <div class="card">
+    <h3 class="card-title">Detailed Log</h3>
+    <div id="log-table-wrap">
+      <div class="loading-state">Loading...</div>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentDays = 7;
+let calorieChart = null;
+let weightChart = null;
+let historyTarget = 2000;
+
+async function loadData(days, btnEl) {
+  currentDays = days;
+  document.querySelectorAll('.range-pill').forEach(b => b.classList.remove('active'));
+  if (btnEl) btnEl.classList.add('active');
+
+  const res = await fetch(`/api/history?days=${days}`);
+  const data = await res.json();
+  historyTarget = data.target;
+
+  renderStats(data, days);
+  renderCalorieChart(data);
+  renderWeightChart(data);
+  renderTable(data.logs);
+}
+
+function renderStats(data, days) {
+  const logs = data.logs;
+  if (!logs.length) {
+    document.getElementById('avg-cal').textContent = '—';
+    document.getElementById('days-logged').textContent = '0';
+    document.getElementById('days-target').textContent = '0';
+    document.getElementById('best-day').textContent = '0 days';
+    return;
+  }
+  const avg = Math.round(logs.reduce((s, l) => s + l.total, 0) / logs.length);
+  const onTarget = logs.filter(l => l.total <= data.target).length;
+
+  let streak = 0, best = 0;
+  for (const l of [...logs].reverse()) {
+    if (l.total <= data.target) { streak++; best = Math.max(best, streak); }
+    else streak = 0;
+  }
+
+  document.getElementById('avg-cal').textContent = avg.toLocaleString();
+  document.getElementById('days-logged').textContent = logs.length;
+  document.getElementById('days-target').textContent = onTarget;
+  document.getElementById('best-day').textContent = best + (best === 1 ? ' day' : ' days');
+}
+
+function renderCalorieChart(data) {
+  const labels = data.logs.map(l => {
+    const d = new Date(l.date + 'T00:00:00');
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  });
+  const values = data.logs.map(l => l.total);
+  const targetLine = data.logs.map(() => data.target);
+
+  if (calorieChart) calorieChart.destroy();
+  const ctx = document.getElementById('calorieHistoryChart').getContext('2d');
+  calorieChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Calories',
+          data: values,
+          backgroundColor: values.map(v => v > data.target ? 'rgba(255,59,48,0.7)' : 'rgba(0,122,255,0.7)'),
+          borderRadius: 6,
+          borderSkipped: false,
+        },
+        {
+          label: 'Target',
+          data: targetLine,
+          type: 'line',
+          borderColor: '#34C759',
+          borderWidth: 2,
+          borderDash: [6, 4],
+          pointRadius: 0,
+          fill: false,
+          tension: 0,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { display: true, position: 'top',
+          labels: { color: '#6E6E73', font: { family: '-apple-system', size: 12 }, boxWidth: 16 }},
+        tooltip: {
+          callbacks: {
+            label: (ctx) => ` ${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString()} kcal`
+          }
+        }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: '#6E6E73', font: { size: 11 } } },
+        y: { grid: { color: '#F2F2F7' }, ticks: { color: '#6E6E73', font: { size: 11 },
+               callback: v => v.toLocaleString() + ' kcal' } }
+      }
+    }
+  });
+}
+
+function renderWeightChart(data) {
+  const labels = data.weight.map(w => {
+    const d = new Date(w.date + 'T00:00:00');
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  });
+  const values = data.weight.map(w => w.weight_kg);
+
+  if (weightChart) weightChart.destroy();
+  const ctx = document.getElementById('weightChart').getContext('2d');
+  if (!values.length) {
+    ctx.font = '14px -apple-system';
+    ctx.fillStyle = '#AEAEB2';
+    ctx.textAlign = 'center';
+    ctx.fillText('No weight data yet. Log your weight above.', ctx.canvas.width / 2, 60);
+    return;
+  }
+
+  weightChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Weight (kg)',
+        data: values,
+        borderColor: '#007AFF',
+        backgroundColor: 'rgba(0,122,255,0.08)',
+        borderWidth: 2,
+        pointBackgroundColor: '#007AFF',
+        pointRadius: 4,
+        fill: true,
+        tension: 0.3,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: '#6E6E73', font: { size: 11 } } },
+        y: { grid: { color: '#F2F2F7' }, ticks: { color: '#6E6E73', font: { size: 11 },
+               callback: v => v + ' kg' } }
+      }
+    }
+  });
+}
+
+function renderTable(logs) {
+  const wrap = document.getElementById('log-table-wrap');
+  if (!logs.length) {
+    wrap.innerHTML = '<div class="empty-state"><div class="empty-icon">📊</div><p>No data for this period</p></div>';
+    return;
+  }
+
+  const rows = logs.map(l => {
+    const d = new Date(l.date + 'T00:00:00');
+    const dateStr = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    const isOver = l.total > historyTarget;
+    return `<div class="hist-row">
+      <span class="hist-date">${dateStr}</span>
+      <span class="hist-entries">${l.entries} entries</span>
+      <div class="hist-bar-bg">
+        <div class="hist-bar" style="width:${Math.min(100, Math.round(l.total/historyTarget*100))}%; background:${isOver ? '#FF3B30' : '#007AFF'}"></div>
+      </div>
+      <span class="hist-kcal ${isOver ? 'text-danger' : ''}">${Math.round(l.total).toLocaleString()} kcal</span>
+    </div>`;
+  }).reverse().join('');
+
+  wrap.innerHTML = `<div class="hist-table">${rows}</div>`;
+}
+
+function toggleWeightForm() {
+  const f = document.getElementById('weight-form');
+  f.style.display = f.style.display === 'none' ? 'flex' : 'none';
+}
+
+async function logWeight() {
+  const val = parseFloat(document.getElementById('weight-input').value);
+  if (!val || val <= 0) return showToast('Enter a valid weight.', 'error');
+
+  const res = await fetch('/api/weight', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ weight_kg: val })
+  });
+  const data = await res.json();
+  if (data.success) {
+    showToast(`Weight logged: ${val} kg`, 'success');
+    document.getElementById('weight-form').style.display = 'none';
+    loadData(currentDays);
+  }
+}
+
+loadData(7);
+</script>
+{% endblock %}

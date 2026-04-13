@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+{% block title %}Setup Your Profile — CalDef{% endblock %}
+
+{% block content %}
+<div class="onboarding-page">
+  <div class="onboarding-container">
+    <div class="onboarding-header">
+      <div class="onboarding-logo">◎</div>
+      <h1>Let's set up your profile</h1>
+      <p>We'll calculate your personal calorie targets using science-based formulas, then your AI coach will create a realistic plan.</p>
+    </div>
+
+    <form id="onboarding-form" action="{{ url_for('onboarding') }}" method="POST">
+      <!-- Step 1: Body Metrics -->
+      <div class="onboarding-step active" id="step-1">
+        <h2 class="step-title">Body Metrics</h2>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Height (cm)</label>
+            <input class="form-input" type="number" name="height_cm" placeholder="170"
+                   min="100" max="250" step="0.5" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Weight (kg)</label>
+            <input class="form-input" type="number" name="weight_kg" placeholder="70"
+                   min="30" max="300" step="0.1" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Age</label>
+            <input class="form-input" type="number" name="age" placeholder="25"
+                   min="13" max="100" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Gender</label>
+            <select class="form-input form-select" name="gender" required>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-primary btn-full" onclick="goStep(2)">Continue</button>
+      </div>
+
+      <!-- Step 2: Activity & Goal -->
+      <div class="onboarding-step" id="step-2">
+        <h2 class="step-title">Activity & Goal</h2>
+
+        <div class="form-group">
+          <label class="form-label">Activity Level</label>
+          <div class="option-group">
+            <label class="option-card">
+              <input type="radio" name="activity_level" value="low" required />
+              <div class="option-content">
+                <div class="option-icon">🪑</div>
+                <div>
+                  <div class="option-title">Low</div>
+                  <div class="option-desc">Desk job, little to no exercise</div>
+                </div>
+              </div>
+            </label>
+            <label class="option-card">
+              <input type="radio" name="activity_level" value="moderate" />
+              <div class="option-content">
+                <div class="option-icon">🚶</div>
+                <div>
+                  <div class="option-title">Moderate</div>
+                  <div class="option-desc">Light exercise 3–5 days/week</div>
+                </div>
+              </div>
+            </label>
+            <label class="option-card">
+              <input type="radio" name="activity_level" value="high" />
+              <div class="option-content">
+                <div class="option-icon">🏃</div>
+                <div>
+                  <div class="option-title">High</div>
+                  <div class="option-desc">Hard exercise 6–7 days/week</div>
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">My Goal</label>
+          <div class="option-group">
+            <label class="option-card">
+              <input type="radio" name="goal" value="lose" required />
+              <div class="option-content">
+                <div class="option-icon">📉</div>
+                <div>
+                  <div class="option-title">Lose Weight</div>
+                  <div class="option-desc">~0.4 kg/week safe deficit</div>
+                </div>
+              </div>
+            </label>
+            <label class="option-card">
+              <input type="radio" name="goal" value="maintain" />
+              <div class="option-content">
+                <div class="option-icon">⚖️</div>
+                <div>
+                  <div class="option-title">Maintain</div>
+                  <div class="option-desc">Stay at current weight</div>
+                </div>
+              </div>
+            </label>
+            <label class="option-card">
+              <input type="radio" name="goal" value="gain" />
+              <div class="option-content">
+                <div class="option-icon">💪</div>
+                <div>
+                  <div class="option-title">Gain Muscle</div>
+                  <div class="option-desc">~0.3 kg/week lean surplus</div>
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button type="button" class="btn btn-secondary" onclick="goStep(1)">Back</button>
+          <button type="button" class="btn btn-primary" onclick="goStep(3)">Continue</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Generate Plan -->
+      <div class="onboarding-step" id="step-3">
+        <div class="plan-generating" id="plan-idle">
+          <div class="plan-icon">✨</div>
+          <h2>Ready to generate your plan</h2>
+          <p>Your AI nutrition coach will analyze your profile and create a personalized, realistic plan.</p>
+          <div class="note-box">
+            <strong>Honest results:</strong> Based on your metabolism, expect 0.3–0.5 kg/week safe weight change — no exaggerated promises.
+          </div>
+          <div class="btn-row">
+            <button type="button" class="btn btn-secondary" onclick="goStep(2)">Back</button>
+            <button type="button" class="btn btn-primary" id="generate-btn" onclick="startGenerate()">Generate My Plan</button>
+          </div>
+        </div>
+
+        <div class="plan-generating" id="plan-loading" style="display:none">
+          <div class="ai-loader">
+            <div class="ai-pulse"></div>
+            <div class="ai-pulse"></div>
+            <div class="ai-pulse"></div>
+          </div>
+          <h2>Creating your plan...</h2>
+          <p>Your AI coach is analyzing your metabolic data and crafting a personalized nutrition strategy.</p>
+          <p class="loading-note">This may take 15–30 seconds.</p>
+        </div>
+      </div>
+    </form>
+
+    <!-- Progress dots -->
+    <div class="step-dots">
+      <div class="step-dot active" id="dot-1"></div>
+      <div class="step-dot" id="dot-2"></div>
+      <div class="step-dot" id="dot-3"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function goStep(n) {
+  const steps = document.querySelectorAll('.onboarding-step');
+  const dots = document.querySelectorAll('.step-dot');
+
+  if (n === 2) {
+    const h = document.querySelector('[name="height_cm"]').value;
+    const w = document.querySelector('[name="weight_kg"]').value;
+    const a = document.querySelector('[name="age"]').value;
+    if (!h || !w || !a) { alert('Please fill in all fields.'); return; }
+  }
+  if (n === 3) {
+    const al = document.querySelector('[name="activity_level"]:checked');
+    const g = document.querySelector('[name="goal"]:checked');
+    if (!al || !g) { alert('Please select your activity level and goal.'); return; }
+  }
+
+  steps.forEach((s, i) => s.classList.toggle('active', i === n - 1));
+  dots.forEach((d, i) => d.classList.toggle('active', i === n - 1));
+}
+
+function startGenerate() {
+  // Validate step 2 selections are present
+  const al = document.querySelector('[name="activity_level"]:checked');
+  const g = document.querySelector('[name="goal"]:checked');
+  if (!al || !g) {
+    alert('Please go back and select your activity level and goal.');
+    return;
+  }
+  document.getElementById('plan-idle').style.display = 'none';
+  document.getElementById('plan-loading').style.display = 'flex';
+  // Submit programmatically — avoids the browser cancelling submission
+  // when the originating button's parent is hidden before the form fires
+  document.getElementById('onboarding-form').submit();
+}
+</script>
+{% endblock %}

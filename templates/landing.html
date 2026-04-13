@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}CalDef — Your AI Nutrition Coach{% endblock %}
+
+{% block content %}
+<div class="landing-page">
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">AI-Powered Nutrition</div>
+      <h1 class="hero-title">Reach your goal.<br>One day at a time.</h1>
+      <p class="hero-subtitle">
+        Personalized calorie tracking powered by AI. Know exactly what to eat, when to eat it, and how close you are to your goal — every single day.
+      </p>
+    </div>
+    <div class="hero-phone">
+      <div class="phone-mockup">
+        <div class="phone-screen">
+          <div class="mock-ring-wrap">
+            <div class="mock-ring">
+              <span class="mock-ring-num">1,840</span>
+              <span class="mock-ring-label">kcal left</span>
+            </div>
+          </div>
+          <div class="mock-bars">
+            <div class="mock-bar"><span>Protein</span><div class="bar-fill" style="width:60%;background:#007AFF"></div><span>72g</span></div>
+            <div class="mock-bar"><span>Carbs</span><div class="bar-fill" style="width:35%;background:#34C759"></div><span>110g</span></div>
+            <div class="mock-bar"><span>Fat</span><div class="bar-fill" style="width:45%;background:#FF9500"></div><span>38g</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Auth Card -->
+  <section class="auth-section">
+    <div class="auth-card">
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchTab('login')">Sign In</button>
+        <button class="auth-tab" onclick="switchTab('register')">Create Account</button>
+      </div>
+
+      <!-- Login Form -->
+      <div id="login-form" class="auth-form">
+        <form action="{{ url_for('login') }}" method="POST">
+          <div class="form-group">
+            <label class="form-label">Username or Email</label>
+            <input class="form-input" type="text" name="username" placeholder="your@email.com" required autocomplete="username" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input class="form-input" type="password" name="password" placeholder="••••••••" required autocomplete="current-password" />
+          </div>
+          <button class="btn btn-primary btn-full" type="submit">Sign In</button>
+        </form>
+        <p class="auth-switch">Don't have an account? <a href="{{ url_for('register') }}">Create one</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features">
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon" style="background:#EBF5FB">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#007AFF" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h3>Daily Calorie Tracking</h3>
+        <p>Log your meals and instantly see how many calories you have left for the day.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:#EAF9EE">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+        </div>
+        <h3>AI Nutrition Coach</h3>
+        <p>Get a personalized plan and daily feedback from your AI coach based on your real metabolism.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:#FFF5E6">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#FF9500" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <h3>Progress History</h3>
+        <p>Track your journey with detailed charts showing your calorie trends over time.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+function switchTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  if (tab === 'login') {
+    document.getElementById('login-form').style.display = 'block';
+  }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+{% block title %}Log Food — CalDef{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Log Food</h1>
+      <p class="page-subtitle">{{ total_consumed }} / {{ target }} kcal today</p>
+    </div>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="log-progress-card card">
+    <div class="log-prog-info">
+      <span class="log-prog-consumed">{{ total_consumed }} kcal consumed</span>
+      <span class="log-prog-remaining {% if remaining < 0 %}text-danger{% endif %}">
+        {% if remaining >= 0 %}{{ remaining }} remaining{% else %}{{ remaining|abs }} over{% endif %}
+      </span>
+    </div>
+    <div class="log-prog-bar-bg">
+      <div class="log-prog-bar {% if remaining < 0 %}log-prog-over{% elif (total_consumed / target * 100) >= 85 %}log-prog-warn{% endif %}"
+           style="width: {{ [[(total_consumed / target * 100)|int, 0]|max, 100]|min }}%"></div>
+    </div>
+  </div>
+
+  <!-- Add Food Form -->
+  <div class="card">
+    <h2 class="card-title">Add Food Entry</h2>
+    <div class="food-form">
+      <div class="form-row">
+        <div class="form-group form-group-lg">
+          <label class="form-label">Food Name</label>
+          <input class="form-input" type="text" id="food-name" placeholder="e.g. Grilled chicken breast" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Calories (kcal)</label>
+          <input class="form-input" type="number" id="food-cal" placeholder="250" min="1" max="9999" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Meal</label>
+          <select class="form-input form-select" id="meal-type">
+            <option value="breakfast">Breakfast</option>
+            <option value="lunch">Lunch</option>
+            <option value="dinner">Dinner</option>
+            <option value="snack">Snack</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Protein (g) <span class="form-optional">optional</span></label>
+          <input class="form-input" type="number" id="food-protein" placeholder="0" min="0" max="999" step="0.1" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Carbs (g) <span class="form-optional">optional</span></label>
+          <input class="form-input" type="number" id="food-carbs" placeholder="0" min="0" max="999" step="0.1" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Fat (g) <span class="form-optional">optional</span></label>
+          <input class="form-input" type="number" id="food-fat" placeholder="0" min="0" max="999" step="0.1" />
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="addFood()" id="add-btn">Add Entry</button>
+    </div>
+  </div>
+
+  <!-- Quick Picks -->
+  <div class="quick-picks">
+    <h3 class="section-label">Quick Add</h3>
+    <div class="quick-grid">
+      <button class="quick-btn" onclick="quickAdd('Banana', 89, 'snack', 1.1, 23, 0.3)">🍌 Banana <span>89</span></button>
+      <button class="quick-btn" onclick="quickAdd('Egg (boiled)', 78, 'breakfast', 6, 0.6, 5)">🥚 Egg <span>78</span></button>
+      <button class="quick-btn" onclick="quickAdd('White rice (1 cup)', 206, 'lunch', 4.3, 45, 0.4)">🍚 White Rice <span>206</span></button>
+      <button class="quick-btn" onclick="quickAdd('Chicken breast (100g)', 165, 'lunch', 31, 0, 3.6)">🍗 Chicken <span>165</span></button>
+      <button class="quick-btn" onclick="quickAdd('Oatmeal (1 cup)', 158, 'breakfast', 6, 27, 3)">🥣 Oatmeal <span>158</span></button>
+      <button class="quick-btn" onclick="quickAdd('Apple', 95, 'snack', 0.5, 25, 0.3)">🍎 Apple <span>95</span></button>
+      <button class="quick-btn" onclick="quickAdd('Greek yogurt (plain, 170g)', 100, 'snack', 17, 6, 0.7)">🥛 Greek Yogurt <span>100</span></button>
+      <button class="quick-btn" onclick="quickAdd('Whole wheat bread (1 slice)', 80, 'breakfast', 3.5, 14, 1)">🍞 Bread <span>80</span></button>
+    </div>
+  </div>
+
+  <!-- Today's Log -->
+  <div class="card">
+    <h2 class="card-title">Today's Log</h2>
+    {% if logs %}
+      <div class="log-table">
+        <div class="log-thead">
+          <span>Food</span>
+          <span>Meal</span>
+          <span>Protein</span>
+          <span>Carbs</span>
+          <span>Fat</span>
+          <span>Calories</span>
+          <span></span>
+        </div>
+        <div id="log-tbody">
+          {% for log in logs %}
+          <div class="log-row" id="row-{{ log.id }}">
+            <span class="log-food-name">{{ log.food_name }}</span>
+            <span><span class="meal-tag meal-tag-{{ log.meal_type }}">{{ log.meal_type.capitalize() }}</span></span>
+            <span class="log-macro">{{ log.protein_g }}g</span>
+            <span class="log-macro">{{ log.carbs_g }}g</span>
+            <span class="log-macro">{{ log.fat_g }}g</span>
+            <span class="log-kcal">{{ log.calories }} kcal</span>
+            <button class="btn-del" onclick="deleteFood({{ log.id }})" title="Delete">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+            </button>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="log-total">
+          <span>Total</span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span id="total-kcal">{{ total_consumed }} kcal</span>
+          <span></span>
+        </div>
+      </div>
+    {% else %}
+      <div class="empty-state" id="empty-state">
+        <div class="empty-icon">📋</div>
+        <p>No food logged yet today</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+let totalConsumed = {{ total_consumed }};
+const target = {{ target }};
+
+function quickAdd(name, cal, meal, protein, carbs, fat) {
+  document.getElementById('food-name').value = name;
+  document.getElementById('food-cal').value = cal;
+  document.getElementById('meal-type').value = meal;
+  document.getElementById('food-protein').value = protein;
+  document.getElementById('food-carbs').value = carbs;
+  document.getElementById('food-fat').value = fat;
+  document.getElementById('food-name').focus();
+}
+
+async function addFood() {
+  const name = document.getElementById('food-name').value.trim();
+  const cal = parseInt(document.getElementById('food-cal').value);
+  const meal = document.getElementById('meal-type').value;
+  const protein = parseFloat(document.getElementById('food-protein').value) || 0;
+  const carbs = parseFloat(document.getElementById('food-carbs').value) || 0;
+  const fat = parseFloat(document.getElementById('food-fat').value) || 0;
+
+  if (!name || !cal || cal <= 0) {
+    showToast('Please enter a food name and calories.', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('add-btn');
+  btn.textContent = 'Adding...';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch('/api/food', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ food_name: name, calories: cal, meal_type: meal,
+                             protein_g: protein, carbs_g: carbs, fat_g: fat })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+
+    addRowToTable(data);
+    totalConsumed += cal;
+    updateProgress();
+
+    document.getElementById('food-name').value = '';
+    document.getElementById('food-cal').value = '';
+    document.getElementById('food-protein').value = '';
+    document.getElementById('food-carbs').value = '';
+    document.getElementById('food-fat').value = '';
+
+    showToast(`Added: ${name} (${cal} kcal)`, 'success');
+  } catch(e) {
+    showToast(e.message || 'Failed to add food.', 'error');
+  }
+
+  btn.textContent = 'Add Entry';
+  btn.disabled = false;
+}
+
+function addRowToTable(log) {
+  const empty = document.getElementById('empty-state');
+  if (empty) empty.remove();
+
+  let tbody = document.getElementById('log-tbody');
+  if (!tbody) {
+    // Re-render table; simplest to reload
+    location.reload();
+    return;
+  }
+
+  const mealColors = { breakfast: '#FF9500', lunch: '#34C759', dinner: '#007AFF', snack: '#AF52DE' };
+  const row = document.createElement('div');
+  row.className = 'log-row';
+  row.id = 'row-' + log.id;
+  row.innerHTML = `
+    <span class="log-food-name">${log.food_name}</span>
+    <span><span class="meal-tag meal-tag-${log.meal_type}">${log.meal_type.charAt(0).toUpperCase()+log.meal_type.slice(1)}</span></span>
+    <span class="log-macro">${log.protein_g}g</span>
+    <span class="log-macro">${log.carbs_g}g</span>
+    <span class="log-macro">${log.fat_g}g</span>
+    <span class="log-kcal">${log.calories} kcal</span>
+    <button class="btn-del" onclick="deleteFood(${log.id})" title="Delete">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+    </button>`;
+  tbody.appendChild(row);
+  document.getElementById('total-kcal').textContent = totalConsumed + ' kcal';
+}
+
+async function deleteFood(id) {
+  await fetch('/api/food/' + id, { method: 'DELETE' });
+  const row = document.getElementById('row-' + id);
+  if (row) {
+    const kcalEl = row.querySelector('.log-kcal');
+    if (kcalEl) totalConsumed -= parseInt(kcalEl.textContent);
+    row.style.opacity = '0';
+    setTimeout(() => row.remove(), 200);
+    updateProgress();
+    document.getElementById('total-kcal').textContent = totalConsumed + ' kcal';
+  }
+}
+
+function updateProgress() {
+  const remaining = target - totalConsumed;
+  const pct = Math.min(100, Math.round((totalConsumed / target) * 100));
+  document.querySelector('.log-prog-consumed').textContent = `${totalConsumed} kcal consumed`;
+  const remEl = document.querySelector('.log-prog-remaining');
+  remEl.textContent = remaining >= 0 ? `${remaining} remaining` : `${Math.abs(remaining)} over`;
+  remEl.className = 'log-prog-remaining' + (remaining < 0 ? ' text-danger' : '');
+  const bar = document.querySelector('.log-prog-bar');
+  bar.style.width = pct + '%';
+  bar.className = 'log-prog-bar' + (remaining < 0 ? ' log-prog-over' : pct >= 85 ? ' log-prog-warn' : '');
+}
+</script>
+{% endblock %}

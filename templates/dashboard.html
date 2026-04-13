@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — CalDef{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <p class="page-date">{{ today }}</p>
+      <h1 class="page-title">Good {% if now().hour < 12 %}morning{% elif now().hour < 17 %}afternoon{% else %}evening{% endif %}, {{ session.username }}.</h1>
+    </div>
+    <a href="{{ url_for('log_food') }}" class="btn btn-primary btn-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Log Food
+    </a>
+  </div>
+
+  <div class="dashboard-grid">
+    <!-- Calorie Ring Card -->
+    <div class="card card-ring">
+      <div class="ring-wrap">
+        <canvas id="calorieChart" width="200" height="200"></canvas>
+        <div class="ring-center">
+          <div class="ring-num {% if pct >= 100 %}ring-over{% elif pct >= 85 %}ring-warn{% endif %}">{{ total_consumed }}</div>
+          <div class="ring-label">kcal eaten</div>
+        </div>
+      </div>
+      <div class="ring-stats">
+        <div class="rstat">
+          <span class="rstat-val">{{ target }}</span>
+          <span class="rstat-key">Target</span>
+        </div>
+        <div class="rstat-divider"></div>
+        <div class="rstat">
+          <span class="rstat-val {% if remaining < 0 %}text-danger{% endif %}">
+            {% if remaining >= 0 %}{{ remaining }}{% else %}+{{ remaining|abs }}{% endif %}
+          </span>
+          <span class="rstat-key">{% if remaining >= 0 %}Remaining{% else %}Over by{% endif %}</span>
+        </div>
+        <div class="rstat-divider"></div>
+        <div class="rstat">
+          <span class="rstat-val">{{ pct }}%</span>
+          <span class="rstat-key">Complete</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Macros Card -->
+    <div class="card card-macros">
+      <h3 class="card-title">Today's Macros</h3>
+      <div class="macro-list">
+        <div class="macro-item">
+          <div class="macro-header">
+            <span class="macro-name">Protein</span>
+            <span class="macro-val">{{ total_protein }}g</span>
+          </div>
+          <div class="macro-bar-bg">
+            <div class="macro-bar" style="width:{{ [([total_protein / (profile.weight_kg * 1.6) * 100, 0]|max), 100]|min }}%; background: #007AFF;"></div>
+          </div>
+        </div>
+        <div class="macro-item">
+          <div class="macro-header">
+            <span class="macro-name">Carbohydrates</span>
+            <span class="macro-val">{{ total_carbs }}g</span>
+          </div>
+          <div class="macro-bar-bg">
+            <div class="macro-bar" style="width:{{ [([total_carbs / ((profile.target_calories * 0.45) / 4) * 100, 0]|max), 100]|min }}%; background: #34C759;"></div>
+          </div>
+        </div>
+        <div class="macro-item">
+          <div class="macro-header">
+            <span class="macro-name">Fat</span>
+            <span class="macro-val">{{ total_fat }}g</span>
+          </div>
+          <div class="macro-bar-bg">
+            <div class="macro-bar" style="width:{{ [([total_fat / ((profile.target_calories * 0.25) / 9) * 100, 0]|max), 100]|min }}%; background: #FF9500;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Coach Card -->
+    <div class="card card-ai">
+      <div class="ai-card-header">
+        <div class="ai-icon">✦</div>
+        <h3 class="card-title">AI Coach</h3>
+        <button class="btn-refresh" id="refresh-btn" onclick="refreshFeedback()" title="Get fresh feedback">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        </button>
+      </div>
+      <div class="ai-feedback" id="ai-feedback">
+        {% if ai_feedback %}
+          <p>{{ ai_feedback }}</p>
+        {% else %}
+          <p class="ai-placeholder">Tap the refresh button to get your personalized daily feedback from your AI coach.</p>
+        {% endif %}
+      </div>
+      <a href="{{ url_for('chat') }}" class="btn btn-ghost btn-sm">Ask your coach a question →</a>
+    </div>
+
+    <!-- Today's Meals -->
+    <div class="card card-meals">
+      <div class="card-header-row">
+        <h3 class="card-title">Today's Meals</h3>
+        <a href="{{ url_for('log_food') }}" class="btn btn-ghost btn-sm">Add Food</a>
+      </div>
+      {% if logs %}
+        <div class="meal-list">
+          {% for log in logs %}
+          <div class="meal-item" id="meal-{{ log.id }}">
+            <div class="meal-dot" style="background: {% if log.meal_type == 'breakfast' %}#FF9500{% elif log.meal_type == 'lunch' %}#34C759{% elif log.meal_type == 'dinner' %}#007AFF{% else %}#AF52DE{% endif %}"></div>
+            <div class="meal-info">
+              <span class="meal-name">{{ log.food_name }}</span>
+              <span class="meal-type-tag">{{ log.meal_type.capitalize() }}</span>
+            </div>
+            <span class="meal-kcal">{{ log.calories }} kcal</span>
+            <button class="meal-del" onclick="deleteFood({{ log.id }})" title="Remove">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state">
+          <div class="empty-icon">🍽️</div>
+          <p>No meals logged today</p>
+          <a href="{{ url_for('log_food') }}" class="btn btn-primary btn-sm">Log your first meal</a>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Your Plan Card -->
+    {% if profile.plan_text %}
+    <div class="card card-plan">
+      <div class="card-header-row">
+        <h3 class="card-title">Your Nutrition Plan</h3>
+        <button class="btn btn-ghost btn-sm" onclick="regenPlan()" id="regen-btn">Regenerate</button>
+      </div>
+      <div class="plan-text md-content" id="plan-content" data-content='{{ profile.plan_text | tojson }}'></div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+// Calorie ring chart
+const consumed = {{ total_consumed }};
+const target = {{ target }};
+const remaining = {{ remaining }};
+const pct = {{ pct }};
+
+const ctx = document.getElementById('calorieChart').getContext('2d');
+const isOver = consumed > target;
+const isWarn = pct >= 85;
+
+new Chart(ctx, {
+  type: 'doughnut',
+  data: {
+    datasets: [{
+      data: isOver
+        ? [target, 0]
+        : [consumed, Math.max(0, remaining)],
+      backgroundColor: isOver
+        ? ['#FF3B30', '#F2F2F7']
+        : isWarn
+          ? ['#FF9500', '#F2F2F7']
+          : ['#007AFF', '#F2F2F7'],
+      borderWidth: 0,
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    cutout: '76%',
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: { legend: { display: false }, tooltip: { enabled: false } },
+    animation: { animateRotate: true, duration: 900, easing: 'easeInOutQuart' }
+  }
+});
+
+async function refreshFeedback() {
+  const btn = document.getElementById('refresh-btn');
+  const fb = document.getElementById('ai-feedback');
+  btn.classList.add('spinning');
+  fb.innerHTML = '<p class="ai-placeholder"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></p>';
+
+  try {
+    const res = await fetch('/api/feedback', { method: 'POST' });
+    const data = await res.json();
+    fb.innerHTML = '<p>' + data.feedback + '</p>';
+  } catch {
+    fb.innerHTML = '<p class="ai-placeholder">Could not reach AI coach. Try again.</p>';
+  }
+  btn.classList.remove('spinning');
+}
+
+async function deleteFood(id) {
+  if (!confirm('Remove this entry?')) return;
+  await fetch('/api/food/' + id, { method: 'DELETE' });
+  document.getElementById('meal-' + id).remove();
+  location.reload();
+}
+
+// Render markdown in plan card
+document.querySelectorAll('.md-content[data-content]').forEach(el => {
+  try { el.innerHTML = marked.parse(JSON.parse(el.dataset.content)); }
+  catch { el.textContent = el.dataset.content; }
+  el.removeAttribute('data-content');
+});
+
+async function regenPlan() {
+  const btn = document.getElementById('regen-btn');
+  btn.textContent = 'Generating...';
+  btn.disabled = true;
+  try {
+    const res = await fetch('/api/regenerate-plan', { method: 'POST' });
+    const data = await res.json();
+    document.getElementById('plan-content').innerHTML = marked.parse(data.plan);
+  } catch {
+    alert('Could not regenerate plan. Please try again.');
+  }
+  btn.textContent = 'Regenerate';
+  btn.disabled = false;
+}
+</script>
+
+{% block scripts %}
+<script>
+// Inject now() function for Jinja
+</script>
+{% endblock %}
+{% endblock %}

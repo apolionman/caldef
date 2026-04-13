@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}CalDef — Calorie Deficit Tracker{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
+  <script>
+    // Configure marked globally — used in chat and plan rendering
+    marked.setOptions({ breaks: true, gfm: true });
+  </script>
+</head>
+<body>
+
+{% if session.user_id %}
+<!-- Top Nav -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="{{ url_for('dashboard') }}" class="nav-brand">
+      <span class="nav-logo">◎</span>
+      <span class="nav-title">CalDef</span>
+    </a>
+    <div class="nav-links">
+      <a href="{{ url_for('dashboard') }}" class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}">
+        Dashboard
+      </a>
+      <a href="{{ url_for('log_food') }}" class="nav-link {% if request.endpoint == 'log_food' %}active{% endif %}">
+        Log Food
+      </a>
+      <a href="{{ url_for('chat') }}" class="nav-link {% if request.endpoint == 'chat' %}active{% endif %}">
+        AI Coach
+      </a>
+      <a href="{{ url_for('history') }}" class="nav-link {% if request.endpoint == 'history' %}active{% endif %}">
+        History
+      </a>
+    </div>
+    <div class="nav-user">
+      <a href="{{ url_for('profile') }}" class="nav-avatar" title="Profile">
+        {{ session.username[0].upper() }}
+      </a>
+      <a href="{{ url_for('logout') }}" class="nav-logout">Sign out</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Bottom Nav -->
+<nav class="bottom-nav">
+  <a href="{{ url_for('dashboard') }}" class="bnav-item {% if request.endpoint == 'dashboard' %}active{% endif %}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    <span>Dashboard</span>
+  </a>
+  <a href="{{ url_for('log_food') }}" class="bnav-item {% if request.endpoint == 'log_food' %}active{% endif %}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+    <span>Log</span>
+  </a>
+  <a href="{{ url_for('chat') }}" class="bnav-item {% if request.endpoint == 'chat' %}active{% endif %}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <span>AI Coach</span>
+  </a>
+  <a href="{{ url_for('history') }}" class="bnav-item {% if request.endpoint == 'history' %}active{% endif %}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    <span>History</span>
+  </a>
+  <a href="{{ url_for('profile') }}" class="bnav-item {% if request.endpoint == 'profile' %}active{% endif %}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span>Profile</span>
+  </a>
+</nav>
+{% endif %}
+
+<!-- Flash messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+        <div class="flash flash-{{ category }}">
+          <span>{{ message }}</span>
+          <button onclick="this.parentElement.remove()" class="flash-close">×</button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<main class="{% if session.user_id %}main-authenticated{% else %}main-auth{% endif %}">
+  {% block content %}{% endblock %}
+</main>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

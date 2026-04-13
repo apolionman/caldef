@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% block title %}AI Coach — CalDef{% endblock %}
+
+{% block content %}
+<div class="chat-page">
+  <div class="chat-header">
+    <div class="chat-avatar">✦</div>
+    <div class="chat-header-info">
+      <h2>AI Nutrition Coach</h2>
+      <p class="chat-status">Powered by Nemotron</p>
+    </div>
+  </div>
+
+  <div class="chat-messages" id="chat-messages">
+    <!-- Welcome message if no history -->
+    {% if not messages %}
+    <div class="chat-welcome">
+      <div class="welcome-icon">✦</div>
+      <h3>Hi, I'm your AI nutrition coach!</h3>
+      <p>Ask me anything about nutrition, your calorie targets, meal ideas, or your progress. I have full context of your profile and today's intake.</p>
+      <div class="suggested-questions">
+        <button class="sq-btn" onclick="sendSuggested(this)">What should I eat for dinner today?</button>
+        <button class="sq-btn" onclick="sendSuggested(this)">How many calories are in a Big Mac?</button>
+        <button class="sq-btn" onclick="sendSuggested(this)">Am I on track to lose weight this week?</button>
+        <button class="sq-btn" onclick="sendSuggested(this)">Give me a high-protein breakfast idea</button>
+      </div>
+    </div>
+    {% endif %}
+
+    {% for msg in messages %}
+    <div class="chat-bubble-wrap {% if msg.role == 'user' %}bubble-user{% else %}bubble-ai{% endif %}">
+      {% if msg.role == 'assistant' %}
+        <div class="bubble-avatar">✦</div>
+      {% endif %}
+      <div class="chat-bubble">
+        {% if msg.role == 'assistant' %}
+          <div class="bubble-text md-content" data-content='{{ msg.content | tojson }}'></div>
+        {% else %}
+          <div class="bubble-text">{{ msg.content | e | replace('\n', '<br>') }}</div>
+        {% endif %}
+        <div class="bubble-time">{{ msg.created_at[:16].replace('T', ' ') if msg.created_at else '' }}</div>
+      </div>
+    </div>
+    {% endfor %}
+
+    <div id="typing-indicator" class="chat-bubble-wrap bubble-ai" style="display:none">
+      <div class="bubble-avatar">✦</div>
+      <div class="chat-bubble">
+        <div class="typing-dots">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-input-area">
+    <div class="chat-input-wrap">
+      <textarea
+        id="chat-input"
+        class="chat-input"
+        placeholder="Ask your nutrition coach..."
+        rows="1"
+        onkeydown="handleKey(event)"
+        oninput="autoResize(this)"
+      ></textarea>
+      <button class="chat-send-btn" id="send-btn" onclick="sendMessage()">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 2L11 13M22 2L15 22 11 13 2 9l20-7z"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+const messagesEl = document.getElementById('chat-messages');
+const inputEl = document.getElementById('chat-input');
+
+// Render all existing AI messages stored as raw JSON in data-content
+function renderExistingMessages() {
+  document.querySelectorAll('.md-content[data-content]').forEach(el => {
+    try {
+      const raw = JSON.parse(el.dataset.content);
+      el.innerHTML = marked.parse(raw);
+    } catch {
+      el.textContent = el.dataset.content;
+    }
+    el.removeAttribute('data-content');
+  });
+}
+
+renderExistingMessages();
+messagesEl.scrollTop = messagesEl.scrollHeight;
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 160) + 'px';
+}
+
+function sendSuggested(btn) {
+  inputEl.value = btn.textContent;
+  sendMessage();
+}
+
+function escapeHtml(text) {
+  return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+async function sendMessage() {
+  const message = inputEl.value.trim();
+  if (!message) return;
+
+  const btn = document.getElementById('send-btn');
+  btn.disabled = true;
+  inputEl.value = '';
+  inputEl.style.height = 'auto';
+
+  const welcome = document.querySelector('.chat-welcome');
+  if (welcome) welcome.remove();
+
+  appendBubble('user', message);
+
+  const typingEl = document.getElementById('typing-indicator');
+  typingEl.style.display = 'flex';
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message })
+    });
+    const data = await res.json();
+    typingEl.style.display = 'none';
+    appendBubble('assistant', data.response);
+  } catch {
+    typingEl.style.display = 'none';
+    appendBubble('assistant', 'I\'m having trouble connecting right now. Please try again.');
+  }
+
+  btn.disabled = false;
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function appendBubble(role, text) {
+  const wrap = document.createElement('div');
+  wrap.className = `chat-bubble-wrap ${role === 'user' ? 'bubble-user' : 'bubble-ai'}`;
+
+  if (role === 'assistant') {
+    wrap.innerHTML = `
+      <div class="bubble-avatar">✦</div>
+      <div class="chat-bubble">
+        <div class="bubble-text md-content">${marked.parse(text)}</div>
+      </div>`;
+  } else {
+    wrap.innerHTML = `
+      <div class="chat-bubble">
+        <div class="bubble-text">${escapeHtml(text).replace(/\n/g,'<br>')}</div>
+      </div>`;
+  }
+
+  const typingEl = document.getElementById('typing-indicator');
+  messagesEl.insertBefore(wrap, typingEl);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+</script>
+{% endblock %}

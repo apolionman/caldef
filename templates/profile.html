@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}Profile — CalDef{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <div class="page-header">
+    <h1 class="page-title">Profile</h1>
+  </div>
+
+  <div class="profile-grid">
+    <!-- User Card -->
+    <div class="card profile-user-card">
+      <div class="profile-avatar">{{ session.username[0].upper() }}</div>
+      <div class="profile-username">{{ user.username }}</div>
+      <div class="profile-email">{{ user.email }}</div>
+      {% if profile %}
+      <div class="profile-badges">
+        <span class="badge">{{ profile.goal.capitalize() }} weight</span>
+        <span class="badge">{{ profile.activity_level.capitalize() }} activity</span>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Metabolic Summary -->
+    {% if profile %}
+    <div class="card">
+      <h3 class="card-title">Metabolic Summary</h3>
+      <div class="meta-grid">
+        <div class="meta-item">
+          <span class="meta-val">{{ profile.bmr | round | int }}</span>
+          <span class="meta-key">BMR (kcal/day)</span>
+          <span class="meta-desc">Base metabolic rate</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-val">{{ profile.tdee | round | int }}</span>
+          <span class="meta-key">TDEE (kcal/day)</span>
+          <span class="meta-desc">Total energy expenditure</span>
+        </div>
+        <div class="meta-item highlight">
+          <span class="meta-val">{{ profile.target_calories }}</span>
+          <span class="meta-key">Daily Target (kcal)</span>
+          <span class="meta-desc">Your goal-adjusted target</span>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Edit Profile Form -->
+    <div class="card profile-form-card">
+      <h3 class="card-title">Update Profile</h3>
+      <form action="{{ url_for('profile') }}" method="POST">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Height (cm)</label>
+            <input class="form-input" type="number" name="height_cm"
+                   value="{{ profile.height_cm if profile else '' }}"
+                   placeholder="170" min="100" max="250" step="0.5" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Weight (kg)</label>
+            <input class="form-input" type="number" name="weight_kg"
+                   value="{{ profile.weight_kg if profile else '' }}"
+                   placeholder="70" min="30" max="300" step="0.1" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Age</label>
+            <input class="form-input" type="number" name="age"
+                   value="{{ profile.age if profile else '' }}"
+                   placeholder="25" min="13" max="100" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Gender</label>
+            <select class="form-input form-select" name="gender">
+              <option value="male" {% if profile and profile.gender == 'male' %}selected{% endif %}>Male</option>
+              <option value="female" {% if profile and profile.gender == 'female' %}selected{% endif %}>Female</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Activity Level</label>
+          <select class="form-input form-select" name="activity_level">
+            <option value="low" {% if profile and profile.activity_level == 'low' %}selected{% endif %}>Low — Sedentary</option>
+            <option value="moderate" {% if profile and profile.activity_level == 'moderate' %}selected{% endif %}>Moderate — Light exercise</option>
+            <option value="high" {% if profile and profile.activity_level == 'high' %}selected{% endif %}>High — Very active</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Goal</label>
+          <select class="form-input form-select" name="goal">
+            <option value="lose" {% if profile and profile.goal == 'lose' %}selected{% endif %}>Lose Weight</option>
+            <option value="maintain" {% if profile and profile.goal == 'maintain' %}selected{% endif %}>Maintain Weight</option>
+            <option value="gain" {% if profile and profile.goal == 'gain' %}selected{% endif %}>Gain Muscle</option>
+          </select>
+        </div>
+        <div class="form-note">
+          Updating your profile will recalculate your calorie targets using the Mifflin-St Jeor formula.
+        </div>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+      </form>
+    </div>
+
+    <!-- Danger Zone -->
+    <div class="card danger-card">
+      <h3 class="card-title">Account</h3>
+      <a href="{{ url_for('logout') }}" class="btn btn-danger-outline">Sign Out</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

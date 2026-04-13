@@ -1,0 +1,24 @@
+services:
+  caldef:
+    build: .
+    container_name: caldef_app
+    ports:
+      - "5050:5050"
+    volumes:
+      # SQLite database persists across container restarts
+      - caldef_data:/data
+    environment:
+      # Change SECRET_KEY before deploying to production
+      - SECRET_KEY=AAAsdk21djjc021i3AOJLFLLISOAID
+      - DATABASE_PATH=/data/caldef.db
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5050/')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  caldef_data:
+    driver: local

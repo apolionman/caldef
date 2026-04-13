@@ -79,6 +79,38 @@
       </div>
     </div>
 
+    <!-- XP & Rank Card -->
+    <div class="card card-xp" id="xp-card">
+      <div class="xp-top">
+        <div class="xp-level-badge" id="xp-level-badge">...</div>
+        <a href="{{ url_for('leaderboard') }}" class="btn btn-ghost btn-sm">Leaderboard →</a>
+      </div>
+      <div class="xp-stats">
+        <div class="xp-stat">
+          <span class="xp-val" id="xp-pts">—</span>
+          <span class="xp-key">Total XP</span>
+        </div>
+        <div class="xp-stat">
+          <span class="xp-val" id="xp-streak">—</span>
+          <span class="xp-key">Day Streak</span>
+        </div>
+        <div class="xp-stat">
+          <span class="xp-val" id="xp-rank">—</span>
+          <span class="xp-key">Global Rank</span>
+        </div>
+        <div class="xp-stat">
+          <span class="xp-val" id="xp-badges">—</span>
+          <span class="xp-key">Badges</span>
+        </div>
+      </div>
+      <div class="xp-bar-wrap">
+        <div class="xp-bar-bg">
+          <div class="xp-bar" id="xp-bar" style="width:0%"></div>
+        </div>
+        <span class="xp-bar-label" id="xp-bar-label"></span>
+      </div>
+    </div>
+
     <!-- AI Coach Card -->
     <div class="card card-ai">
       <div class="ai-card-header">
@@ -178,6 +210,24 @@ new Chart(ctx, {
   }
 });
 
+// Load XP stats on page load
+async function loadStats() {
+  try {
+    const res = await fetch('/api/stats');
+    const s = await res.json();
+    document.getElementById('xp-pts').textContent = s.total_points.toLocaleString();
+    document.getElementById('xp-streak').textContent = s.current_streak > 0 ? '🔥 ' + s.current_streak + 'd' : '—';
+    document.getElementById('xp-rank').textContent = '#' + s.rank;
+    document.getElementById('xp-badges').textContent = s.achievement_count + ' 🏅';
+    const lvl = s.level;
+    document.getElementById('xp-level-badge').textContent = lvl.icon + ' ' + lvl.name;
+    document.getElementById('xp-level-badge').style.cssText = `background:${lvl.color}22;color:${lvl.color};border:1px solid ${lvl.color}44`;
+    document.getElementById('xp-bar').style.width = lvl.progress + '%';
+    document.getElementById('xp-bar-label').textContent = lvl.next ? s.total_points + ' / ' + lvl.next + ' XP to next level' : 'Max level!';
+  } catch {}
+}
+loadStats();
+
 async function refreshFeedback() {
   const btn = document.getElementById('refresh-btn');
   const fb = document.getElementById('ai-feedback');
@@ -188,6 +238,8 @@ async function refreshFeedback() {
     const res = await fetch('/api/feedback', { method: 'POST' });
     const data = await res.json();
     fb.innerHTML = '<p>' + data.feedback + '</p>';
+    handleAchievements(data.achievements);
+    loadStats();
   } catch {
     fb.innerHTML = '<p class="ai-placeholder">Could not reach AI coach. Try again.</p>';
   }

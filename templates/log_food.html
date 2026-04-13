@@ -172,6 +172,7 @@ async function addFood() {
     addRowToTable(data);
     totalConsumed += cal;
     updateProgress();
+    handleAchievements(data.achievements);
 
     document.getElementById('food-name').value = '';
     document.getElementById('food-cal').value = '';

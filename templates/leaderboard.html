@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block title %}Leaderboard — CalDef{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Leaderboard</h1>
+      <p class="page-subtitle">Rankings update in real time as you log, chat, and hit your targets.</p>
+    </div>
+    <!-- My rank pill -->
+    <div class="my-rank-pill">
+      <span class="my-rank-icon">{{ my_stats.level.icon }}</span>
+      <div>
+        <div class="my-rank-num">#{{ my_stats.rank }}</div>
+        <div class="my-rank-label">Your Rank</div>
+      </div>
+      <div class="my-rank-divider"></div>
+      <div>
+        <div class="my-rank-num">{{ my_stats.total_points | int }}</div>
+        <div class="my-rank-label">XP</div>
+      </div>
+      <div class="my-rank-divider"></div>
+      <div>
+        <div class="my-rank-num">🔥 {{ my_stats.current_streak }}</div>
+        <div class="my-rank-label">Streak</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Podium (top 3) -->
+  {% if board|length >= 3 %}
+  <div class="podium">
+    <!-- 2nd -->
+    <div class="podium-place podium-2">
+      <div class="podium-avatar {% if board[1].id == my_id %}podium-me{% endif %}">
+        {{ board[1].username[0].upper() }}
+      </div>
+      <div class="podium-name">{{ board[1].username }}</div>
+      <div class="podium-pts">{{ board[1].total_points | int }} XP</div>
+      <div class="podium-block podium-block-2">🥈</div>
+    </div>
+    <!-- 1st -->
+    <div class="podium-place podium-1">
+      <div class="podium-crown">👑</div>
+      <div class="podium-avatar podium-avatar-1 {% if board[0].id == my_id %}podium-me{% endif %}">
+        {{ board[0].username[0].upper() }}
+      </div>
+      <div class="podium-name">{{ board[0].username }}</div>
+      <div class="podium-pts">{{ board[0].total_points | int }} XP</div>
+      <div class="podium-block podium-block-1">🥇</div>
+    </div>
+    <!-- 3rd -->
+    <div class="podium-place podium-3">
+      <div class="podium-avatar {% if board[2].id == my_id %}podium-me{% endif %}">
+        {{ board[2].username[0].upper() }}
+      </div>
+      <div class="podium-name">{{ board[2].username }}</div>
+      <div class="podium-pts">{{ board[2].total_points | int }} XP</div>
+      <div class="podium-block podium-block-3">🥉</div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Full table -->
+  <div class="card lb-card">
+    <div class="lb-thead">
+      <span>#</span>
+      <span>Player</span>
+      <span>Level</span>
+      <span>XP</span>
+      <span>Streak</span>
+      <span>Badges</span>
+    </div>
+    {% for player in board %}
+    <div class="lb-row {% if player.id == my_id %}lb-row-me{% endif %} {% if player.rank <= 3 %}lb-row-top{% endif %}">
+      <span class="lb-rank">
+        {% if player.rank == 1 %}🥇
+        {% elif player.rank == 2 %}🥈
+        {% elif player.rank == 3 %}🥉
+        {% else %}{{ player.rank }}{% endif %}
+      </span>
+      <span class="lb-user">
+        <div class="lb-avatar {% if player.id == my_id %}lb-avatar-me{% endif %}">
+          {{ player.username[0].upper() }}
+        </div>
+        <span class="lb-username">
+          {{ player.username }}
+          {% if player.id == my_id %}<span class="lb-you">You</span>{% endif %}
+        </span>
+      </span>
+      <span>
+        <span class="level-badge" style="background: {{ player.level.color }}22; color: {{ player.level.color }}; border: 1px solid {{ player.level.color }}44;">
+          {{ player.level.icon }} {{ player.level.name }}
+        </span>
+      </span>
+      <span class="lb-xp">{{ player.total_points | int }}</span>
+      <span class="lb-streak">
+        {% if player.current_streak > 0 %}
+          🔥 {{ player.current_streak }}d
+        {% else %}—{% endif %}
+      </span>
+      <span class="lb-badges">{{ player.achievement_count }} 🏅</span>
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <div class="empty-icon">🏆</div>
+      <p>No players yet — be the first!</p>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Scoring guide -->
+  <div class="card scoring-guide">
+    <h3 class="card-title">How XP Works</h3>
+    <div class="scoring-grid">
+      <div class="score-item"><span class="score-icon">🍽️</span><div><b>Log a meal</b><br><span>+10 XP per entry</span></div></div>
+      <div class="score-item"><span class="score-icon">🎯</span><div><b>Hit daily target</b><br><span>+50 XP bonus</span></div></div>
+      <div class="score-item"><span class="score-icon">💬</span><div><b>Chat with coach</b><br><span>+15 XP per message</span></div></div>
+      <div class="score-item"><span class="score-icon">⚖️</span><div><b>Log your weight</b><br><span>+20 XP per day</span></div></div>
+      <div class="score-item"><span class="score-icon">🔥</span><div><b>Daily streaks</b><br><span>Streak achievements unlock bonus XP</span></div></div>
+      <div class="score-item"><span class="score-icon">🏅</span><div><b>Achievements</b><br><span>50 – 1000 XP each</span></div></div>
+    </div>
+    <p class="scoring-note">Weight loss contributes a small bonus — consistency and logging activity are the primary drivers.</p>
+  </div>
+</div>
+{% endblock %}

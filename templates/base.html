@@ -35,6 +35,9 @@
       <a href="{{ url_for('history') }}" class="nav-link {% if request.endpoint == 'history' %}active{% endif %}">
         History
       </a>
+      <a href="{{ url_for('leaderboard') }}" class="nav-link {% if request.endpoint == 'leaderboard' %}active{% endif %}">
+        Leaderboard
+      </a>
     </div>
     <div class="nav-user">
       <a href="{{ url_for('profile') }}" class="nav-avatar" title="Profile">
@@ -62,6 +65,10 @@
   <a href="{{ url_for('history') }}" class="bnav-item {% if request.endpoint == 'history' %}active{% endif %}">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
     <span>History</span>
+  </a>
+  <a href="{{ url_for('leaderboard') }}" class="bnav-item {% if request.endpoint == 'leaderboard' %}active{% endif %}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 20 18 10"/><polyline points="12 20 12 4"/><polyline points="6 20 6 14"/></svg>
+    <span>Ranks</span>
   </a>
   <a href="{{ url_for('profile') }}" class="bnav-item {% if request.endpoint == 'profile' %}active{% endif %}">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>

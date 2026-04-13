@@ -16,6 +16,20 @@ function showToast(message, type = 'default') {
   }, 3000);
 }
 
+// Achievement toast notifications (used on log_food and dashboard)
+function handleAchievements(list) {
+  if (!list || !list.length) return;
+  list.forEach((a, i) => {
+    setTimeout(() => {
+      const t = document.createElement('div');
+      t.className = 'achievement-toast';
+      t.innerHTML = `<span class="ach-icon">${a.icon}</span><div><b>Achievement Unlocked!</b><br>${a.name}</div>`;
+      document.body.appendChild(t);
+      setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 400); }, 4000);
+    }, i * 600);
+  });
+}
+
 // Auto-dismiss flash messages
 document.querySelectorAll('.flash').forEach(el => {
   setTimeout(() => {

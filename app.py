@@ -8,6 +8,11 @@ from flask import (
 from werkzeug.security import generate_password_hash, check_password_hash
 from database import init_db, get_db
 from ai_client import generate_plan, get_daily_feedback, chat_with_ai
+from gamification import (
+    process_meal_logged, process_weight_logged,
+    process_feedback, process_ai_chat,
+    get_user_stats, get_leaderboard,
+)
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "caldef-apple-inspired-secret-2024")
@@ -267,7 +272,9 @@ def api_feedback():
             (user_id, today, feedback, consumed),
         )
 
-    return jsonify({"feedback": feedback})
+    target = profile["target_calories"] if profile else 2000
+    gami = process_feedback(user_id, consumed, target)
+    return jsonify({"feedback": feedback, **gami})
 
 
 # ──────────────────────────────────────────────
@@ -318,6 +325,7 @@ def api_add_food():
         )
         food_id = cursor.lastrowid
 
+    gami = process_meal_logged(user_id)
     return jsonify({
         "id": food_id,
         "food_name": food_name,
@@ -326,6 +334,7 @@ def api_add_food():
         "carbs_g": carbs_g,
         "fat_g": fat_g,
         "meal_type": meal_type,
+        **gami,
     })
 
 
@@ -406,7 +415,8 @@ def api_chat():
             (user_id, "assistant", ai_response)
         )
 
-    return jsonify({"response": ai_response})
+    gami = process_ai_chat(user_id)
+    return jsonify({"response": ai_response, **gami})
 
 
 # ──────────────────────────────────────────────
@@ -464,7 +474,27 @@ def api_log_weight():
                ON CONFLICT(user_id, date) DO UPDATE SET weight_kg=excluded.weight_kg""",
             (session["user_id"], today, weight_kg),
         )
-    return jsonify({"success": True, "weight_kg": weight_kg})
+    gami = process_weight_logged(session["user_id"], weight_kg)
+    return jsonify({"success": True, "weight_kg": weight_kg, **gami})
+
+
+# ──────────────────────────────────────────────
+# Gamification endpoints
+# ──────────────────────────────────────────────
+
+@app.route("/api/stats")
+@login_required
+def api_stats():
+    return jsonify(get_user_stats(session["user_id"]))
+
+
+@app.route("/leaderboard")
+@login_required
+def leaderboard():
+    board = get_leaderboard()
+    my_stats = get_user_stats(session["user_id"])
+    return render_template("leaderboard.html", board=board,
+                           my_id=session["user_id"], my_stats=my_stats)
 
 
 # ──────────────────────────────────────────────

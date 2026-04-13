@@ -103,9 +103,14 @@
             <span class="log-macro">{{ log.carbs_g }}g</span>
             <span class="log-macro">{{ log.fat_g }}g</span>
             <span class="log-kcal">{{ log.calories }} kcal</span>
-            <button class="btn-del" onclick="deleteFood({{ log.id }})" title="Delete">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-            </button>
+            <div class="log-actions">
+              <button class="btn-edit" onclick="editFood({{ log.id }})" title="Edit">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              </button>
+              <button class="btn-del" onclick="deleteFood({{ log.id }})" title="Delete">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+              </button>
+            </div>
           </div>
           {% endfor %}
         </div>
@@ -125,6 +130,53 @@
         <p>No food logged yet today</p>
       </div>
     {% endif %}
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal-overlay" id="edit-modal" onclick="closeEditModal(event)">
+  <div class="modal-sheet">
+    <div class="modal-header">
+      <h3 class="modal-title">Edit Entry</h3>
+      <button class="modal-close" onclick="closeEditModal()">×</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Food Name</label>
+      <input class="form-input" type="text" id="edit-name" placeholder="Food name" />
+    </div>
+    <div class="form-row" style="margin-top:12px">
+      <div class="form-group">
+        <label class="form-label">Calories</label>
+        <input class="form-input" type="number" id="edit-cal" min="1" max="9999" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Meal</label>
+        <select class="form-input form-select" id="edit-meal">
+          <option value="breakfast">Breakfast</option>
+          <option value="lunch">Lunch</option>
+          <option value="dinner">Dinner</option>
+          <option value="snack">Snack</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row" style="margin-top:12px">
+      <div class="form-group">
+        <label class="form-label">Protein (g)</label>
+        <input class="form-input" type="number" id="edit-protein" min="0" step="0.1" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Carbs (g)</label>
+        <input class="form-input" type="number" id="edit-carbs" min="0" step="0.1" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Fat (g)</label>
+        <input class="form-input" type="number" id="edit-fat" min="0" step="0.1" />
+      </div>
+    </div>
+    <div class="btn-row" style="margin-top:20px">
+      <button class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+      <button class="btn btn-primary" id="edit-save-btn" onclick="saveEdit()">Save Changes</button>
+    </div>
   </div>
 </div>
 
@@ -200,7 +252,6 @@ function addRowToTable(log) {
     return;
   }
 
-  const mealColors = { breakfast: '#FF9500', lunch: '#34C759', dinner: '#007AFF', snack: '#AF52DE' };
   const row = document.createElement('div');
   row.className = 'log-row';
   row.id = 'row-' + log.id;
@@ -211,9 +262,14 @@ function addRowToTable(log) {
     <span class="log-macro">${log.carbs_g}g</span>
     <span class="log-macro">${log.fat_g}g</span>
     <span class="log-kcal">${log.calories} kcal</span>
-    <button class="btn-del" onclick="deleteFood(${log.id})" title="Delete">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-    </button>`;
+    <div class="log-actions">
+      <button class="btn-edit" onclick="editFood(${log.id})" title="Edit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </button>
+      <button class="btn-del" onclick="deleteFood(${log.id})" title="Delete">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+      </button>
+    </div>`;
   tbody.appendChild(row);
   document.getElementById('total-kcal').textContent = totalConsumed + ' kcal';
 }
@@ -229,6 +285,84 @@ async function deleteFood(id) {
     updateProgress();
     document.getElementById('total-kcal').textContent = totalConsumed + ' kcal';
   }
+}
+
+// ── Edit food entry ──────────────────────
+let editingId = null;
+
+function editFood(id) {
+  const row = document.getElementById('row-' + id);
+  if (!row) return;
+  editingId = id;
+
+  document.getElementById('edit-name').value = row.querySelector('.log-food-name').textContent;
+  document.getElementById('edit-cal').value = parseInt(row.querySelector('.log-kcal').textContent);
+  const macros = row.querySelectorAll('.log-macro');
+  document.getElementById('edit-protein').value = parseFloat(macros[0].textContent) || 0;
+  document.getElementById('edit-carbs').value = parseFloat(macros[1].textContent) || 0;
+  document.getElementById('edit-fat').value = parseFloat(macros[2].textContent) || 0;
+
+  const mealTag = row.querySelector('.meal-tag');
+  const mealClass = [...mealTag.classList].find(c => c.startsWith('meal-tag-') && c !== 'meal-tag');
+  document.getElementById('edit-meal').value = mealClass ? mealClass.replace('meal-tag-', '') : 'snack';
+
+  document.getElementById('edit-modal').classList.add('open');
+  document.getElementById('edit-name').focus();
+}
+
+function closeEditModal(e) {
+  if (e && e.target !== document.getElementById('edit-modal')) return;
+  document.getElementById('edit-modal').classList.remove('open');
+  editingId = null;
+}
+
+async function saveEdit() {
+  const name = document.getElementById('edit-name').value.trim();
+  const cal = parseInt(document.getElementById('edit-cal').value);
+  const meal = document.getElementById('edit-meal').value;
+  const protein = parseFloat(document.getElementById('edit-protein').value) || 0;
+  const carbs = parseFloat(document.getElementById('edit-carbs').value) || 0;
+  const fat = parseFloat(document.getElementById('edit-fat').value) || 0;
+
+  if (!name || !cal || cal <= 0) { showToast('Food name and calories are required.', 'error'); return; }
+
+  const btn = document.getElementById('edit-save-btn');
+  btn.textContent = 'Saving…';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch('/api/food/' + editingId, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ food_name: name, calories: cal, meal_type: meal,
+                             protein_g: protein, carbs_g: carbs, fat_g: fat })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+
+    const row = document.getElementById('row-' + editingId);
+    const oldCal = parseInt(row.querySelector('.log-kcal').textContent);
+    totalConsumed = totalConsumed - oldCal + cal;
+
+    row.querySelector('.log-food-name').textContent = name;
+    const mealTag = row.querySelector('.meal-tag');
+    mealTag.textContent = meal.charAt(0).toUpperCase() + meal.slice(1);
+    mealTag.className = 'meal-tag meal-tag-' + meal;
+    const macros = row.querySelectorAll('.log-macro');
+    macros[0].textContent = protein + 'g';
+    macros[1].textContent = carbs + 'g';
+    macros[2].textContent = fat + 'g';
+    row.querySelector('.log-kcal').textContent = cal + ' kcal';
+    document.getElementById('total-kcal').textContent = totalConsumed + ' kcal';
+    updateProgress();
+
+    document.getElementById('edit-modal').classList.remove('open');
+    showToast('Entry updated.', 'success');
+  } catch(e) {
+    showToast(e.message || 'Failed to update.', 'error');
+  }
+  btn.textContent = 'Save Changes';
+  btn.disabled = false;
 }
 
 function updateProgress() {

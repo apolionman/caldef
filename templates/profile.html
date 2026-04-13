@@ -101,11 +101,49 @@
       </form>
     </div>
 
-    <!-- Danger Zone -->
+    <!-- Account Settings -->
     <div class="card danger-card">
       <h3 class="card-title">Account</h3>
-      <a href="{{ url_for('logout') }}" class="btn btn-danger-outline">Sign Out</a>
+      <div class="form-group" style="margin-bottom: 16px;">
+        <label class="form-label">Change Username</label>
+        <div class="username-change-row">
+          <input class="form-input" type="text" id="new-username"
+                 value="{{ user.username }}" placeholder="New username"
+                 minlength="3" maxlength="30" />
+          <button class="btn btn-secondary" onclick="changeUsername()" id="username-btn">Update</button>
+        </div>
+      </div>
+      <a href="{{ url_for('logout') }}" class="btn btn-danger-outline btn-full">Sign Out</a>
     </div>
   </div>
 </div>
+
+<script>
+async function changeUsername() {
+  const input = document.getElementById('new-username');
+  const btn = document.getElementById('username-btn');
+  const newName = input.value.trim();
+  if (newName.length < 3) { showToast('Username must be at least 3 characters.', 'error'); return; }
+
+  btn.textContent = 'Saving…';
+  btn.disabled = true;
+  try {
+    const res = await fetch('/api/username', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: newName })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    showToast('Username updated!', 'success');
+    document.querySelector('.profile-username').textContent = data.username;
+    document.querySelector('.profile-avatar').textContent = data.username[0].toUpperCase();
+    document.querySelector('.nav-avatar').textContent = data.username[0].toUpperCase();
+  } catch(e) {
+    showToast(e.message || 'Failed to update username.', 'error');
+  }
+  btn.textContent = 'Update';
+  btn.disabled = false;
+}
+</script>
 {% endblock %}

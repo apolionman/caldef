@@ -338,6 +338,40 @@ def api_add_food():
     })
 
 
+@app.route("/api/food/<int:food_id>", methods=["PUT"])
+@login_required
+def api_edit_food(food_id):
+    data = request.get_json()
+    user_id = session["user_id"]
+
+    food_name = (data.get("food_name") or "").strip()
+    calories = int(data.get("calories", 0))
+    protein_g = float(data.get("protein_g", 0))
+    carbs_g = float(data.get("carbs_g", 0))
+    fat_g = float(data.get("fat_g", 0))
+    meal_type = data.get("meal_type", "meal")
+
+    if not food_name or calories <= 0:
+        return jsonify({"error": "Food name and calories are required."}), 400
+
+    with get_db() as db:
+        db.execute(
+            """UPDATE food_logs
+               SET food_name=?, calories=?, protein_g=?, carbs_g=?, fat_g=?, meal_type=?
+               WHERE id=? AND user_id=?""",
+            (food_name, calories, protein_g, carbs_g, fat_g, meal_type, food_id, user_id),
+        )
+    return jsonify({
+        "id": food_id,
+        "food_name": food_name,
+        "calories": calories,
+        "protein_g": protein_g,
+        "carbs_g": carbs_g,
+        "fat_g": fat_g,
+        "meal_type": meal_type,
+    })
+
+
 @app.route("/api/food/<int:food_id>", methods=["DELETE"])
 @login_required
 def api_delete_food(food_id):
@@ -481,6 +515,25 @@ def api_log_weight():
 # ──────────────────────────────────────────────
 # Gamification endpoints
 # ──────────────────────────────────────────────
+
+@app.route("/api/username", methods=["POST"])
+@login_required
+def api_change_username():
+    data = request.get_json()
+    new_username = (data.get("username") or "").strip()
+    if len(new_username) < 3:
+        return jsonify({"error": "Username must be at least 3 characters."}), 400
+    if len(new_username) > 30:
+        return jsonify({"error": "Username must be 30 characters or fewer."}), 400
+    try:
+        with get_db() as db:
+            db.execute("UPDATE users SET username=? WHERE id=?",
+                       (new_username, session["user_id"]))
+        session["username"] = new_username
+        return jsonify({"success": True, "username": new_username})
+    except Exception:
+        return jsonify({"error": "That username is already taken."}), 409
+
 
 @app.route("/api/stats")
 @login_required

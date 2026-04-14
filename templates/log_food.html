@@ -67,16 +67,33 @@
 
   <!-- Quick Picks -->
   <div class="quick-picks">
-    <h3 class="section-label">Quick Add</h3>
-    <div class="quick-grid">
-      <button class="quick-btn" onclick="quickAdd('Banana', 89, 'snack', 1.1, 23, 0.3)">🍌 Banana <span>89</span></button>
-      <button class="quick-btn" onclick="quickAdd('Egg (boiled)', 78, 'breakfast', 6, 0.6, 5)">🥚 Egg <span>78</span></button>
-      <button class="quick-btn" onclick="quickAdd('White rice (1 cup)', 206, 'lunch', 4.3, 45, 0.4)">🍚 White Rice <span>206</span></button>
-      <button class="quick-btn" onclick="quickAdd('Chicken breast (100g)', 165, 'lunch', 31, 0, 3.6)">🍗 Chicken <span>165</span></button>
-      <button class="quick-btn" onclick="quickAdd('Oatmeal (1 cup)', 158, 'breakfast', 6, 27, 3)">🥣 Oatmeal <span>158</span></button>
-      <button class="quick-btn" onclick="quickAdd('Apple', 95, 'snack', 0.5, 25, 0.3)">🍎 Apple <span>95</span></button>
-      <button class="quick-btn" onclick="quickAdd('Greek yogurt (plain, 170g)', 100, 'snack', 17, 6, 0.7)">🥛 Greek Yogurt <span>100</span></button>
-      <button class="quick-btn" onclick="quickAdd('Whole wheat bread (1 slice)', 80, 'breakfast', 3.5, 14, 1)">🍞 Bread <span>80</span></button>
+    <div class="quick-tab-bar">
+      <h3 class="section-label" style="margin-bottom:0">Quick Add</h3>
+      <div class="quick-tabs">
+        <button class="quick-tab active" id="tab-btn-presets" onclick="switchQuickTab('presets')">Presets</button>
+        <button class="quick-tab"        id="tab-btn-recent"  onclick="switchQuickTab('recent')">My Foods</button>
+      </div>
+    </div>
+
+    <!-- Presets panel -->
+    <div class="quick-panel" id="quick-panel-presets">
+      <div class="quick-grid">
+        <button class="quick-btn" onclick="quickAdd('Banana', 89, 'snack', 1.1, 23, 0.3)">🍌 Banana <span>89</span></button>
+        <button class="quick-btn" onclick="quickAdd('Egg (boiled)', 78, 'breakfast', 6, 0.6, 5)">🥚 Egg <span>78</span></button>
+        <button class="quick-btn" onclick="quickAdd('White rice (1 cup)', 206, 'lunch', 4.3, 45, 0.4)">🍚 White Rice <span>206</span></button>
+        <button class="quick-btn" onclick="quickAdd('Chicken breast (100g)', 165, 'lunch', 31, 0, 3.6)">🍗 Chicken <span>165</span></button>
+        <button class="quick-btn" onclick="quickAdd('Oatmeal (1 cup)', 158, 'breakfast', 6, 27, 3)">🥣 Oatmeal <span>158</span></button>
+        <button class="quick-btn" onclick="quickAdd('Apple', 95, 'snack', 0.5, 25, 0.3)">🍎 Apple <span>95</span></button>
+        <button class="quick-btn" onclick="quickAdd('Greek yogurt (plain, 170g)', 100, 'snack', 17, 6, 0.7)">🥛 Greek Yogurt <span>100</span></button>
+        <button class="quick-btn" onclick="quickAdd('Whole wheat bread (1 slice)', 80, 'breakfast', 3.5, 14, 1)">🍞 Bread <span>80</span></button>
+      </div>
+    </div>
+
+    <!-- Recent / My Foods panel -->
+    <div class="quick-panel" id="quick-panel-recent" style="display:none">
+      <div class="quick-grid" id="recent-foods-grid">
+        <span class="quick-loading">Loading your foods…</span>
+      </div>
     </div>
   </div>
 
@@ -183,6 +200,79 @@
 <script>
 let totalConsumed = {{ total_consumed }};
 const target = {{ target }};
+
+// Bridge for voice.js to update the calorie total (avoids let-scoping issues)
+window.voiceUpdateCalories = function(delta) {
+  totalConsumed += delta;
+  updateProgress();
+  const el = document.getElementById('total-kcal');
+  if (el) el.textContent = totalConsumed + ' kcal';
+};
+
+// ── Quick Add tabs ───────────────────────
+const MEAL_COLORS = { breakfast:'#FF9500', lunch:'#34C759', dinner:'#007AFF', snack:'#AF52DE' };
+let recentLoaded = false;
+
+function switchQuickTab(tab) {
+  document.querySelectorAll('.quick-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.quick-panel').forEach(p => { p.style.display = 'none'; });
+  document.getElementById('tab-btn-' + tab).classList.add('active');
+  document.getElementById('quick-panel-' + tab).style.display = '';
+
+  if (tab === 'recent' && !recentLoaded) loadRecentFoods();
+}
+
+async function loadRecentFoods() {
+  const grid = document.getElementById('recent-foods-grid');
+  try {
+    const res   = await fetch('/api/recent-foods');
+    const foods = await res.json();
+    recentLoaded = true;
+    grid.innerHTML = '';
+
+    if (!foods.length) {
+      grid.innerHTML = '<span class="quick-empty">No food history yet — log a few meals and they\'ll appear here.</span>';
+      return;
+    }
+
+    foods.forEach(f => {
+      const btn = document.createElement('button');
+      btn.className = 'quick-btn quick-btn-recent';
+
+      const dot = document.createElement('span');
+      dot.className = 'quick-meal-dot';
+      dot.style.background = MEAL_COLORS[f.meal_type] || '#AEAEB2';
+
+      const name = document.createElement('span');
+      name.className = 'quick-recent-name';
+      name.textContent = f.food_name;
+
+      const right = document.createElement('span');
+      right.className = 'quick-recent-right';
+
+      if (f.log_count > 1) {
+        const count = document.createElement('span');
+        count.className = 'quick-count';
+        count.textContent = '×' + f.log_count;
+        right.appendChild(count);
+      }
+
+      const cal = document.createElement('span');
+      cal.textContent = f.calories;
+      right.appendChild(cal);
+
+      btn.appendChild(dot);
+      btn.appendChild(name);
+      btn.appendChild(right);
+      btn.addEventListener('click', () =>
+        quickAdd(f.food_name, f.calories, f.meal_type, f.protein_g, f.carbs_g, f.fat_g)
+      );
+      grid.appendChild(btn);
+    });
+  } catch {
+    grid.innerHTML = '<span class="quick-empty">Could not load recent foods.</span>';
+  }
+}
 
 function quickAdd(name, cal, meal, protein, carbs, fat) {
   document.getElementById('food-name').value = name;

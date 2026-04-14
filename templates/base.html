@@ -95,7 +95,45 @@
   {% block content %}{% endblock %}
 </main>
 
+{% if session.user_id %}
+<!-- ── Floating voice button ── -->
+<button class="voice-fab" id="voice-fab" onclick="Voice.start()" title="Voice command (add / edit / delete food)">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+    <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+    <line x1="12" y1="19" x2="12" y2="23"/>
+    <line x1="8"  y1="23" x2="16" y2="23"/>
+  </svg>
+</button>
+
+<!-- ── Voice overlay ── -->
+<div class="voice-overlay" id="voice-overlay">
+  <button class="voice-overlay-close" onclick="Voice.close()">×</button>
+  <div class="voice-panel">
+    <div class="voice-orb voice-orb-ready" id="voice-orb" onclick="Voice.orbTap()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+        <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+        <line x1="12" y1="19" x2="12" y2="23"/>
+        <line x1="8"  y1="23" x2="16" y2="23"/>
+      </svg>
+    </div>
+    <p class="voice-status" id="voice-status">Ready</p>
+    <p class="voice-transcript" id="voice-transcript"></p>
+    <p class="voice-response" id="voice-response"></p>
+    <div class="voice-hints">
+      <span>"Add lunch chicken rice 400 calories"</span>
+      <span>"Remove egg white from breakfast"</span>
+      <span>"How many calories do I have left?"</span>
+    </div>
+  </div>
+</div>
+{% endif %}
+
 <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% if session.user_id %}
+<script src="{{ url_for('static', filename='js/voice.js') }}"></script>
+{% endif %}
 {% block scripts %}{% endblock %}
 </body>
 </html>

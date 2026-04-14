@@ -7,7 +7,7 @@ from flask import (
 )
 from werkzeug.security import generate_password_hash, check_password_hash
 from database import init_db, get_db
-from ai_client import generate_plan, get_daily_feedback, chat_with_ai
+from ai_client import generate_plan, get_daily_feedback, chat_with_ai, parse_voice_command
 from gamification import (
     process_meal_logged, process_weight_logged,
     process_feedback, process_ai_chat,
@@ -515,6 +515,125 @@ def api_log_weight():
 # ──────────────────────────────────────────────
 # Gamification endpoints
 # ──────────────────────────────────────────────
+
+@app.route("/api/recent-foods")
+@login_required
+def api_recent_foods():
+    user_id = session["user_id"]
+    with get_db() as db:
+        rows = db.execute(
+            """SELECT food_name,
+                      ROUND(AVG(calories))   AS calories,
+                      ROUND(AVG(protein_g),1) AS protein_g,
+                      ROUND(AVG(carbs_g),1)   AS carbs_g,
+                      ROUND(AVG(fat_g),1)     AS fat_g,
+                      (SELECT meal_type FROM food_logs f2
+                       WHERE f2.user_id = f.user_id AND f2.food_name = f.food_name
+                       ORDER BY logged_at DESC LIMIT 1) AS meal_type,
+                      COUNT(*) AS log_count,
+                      MAX(logged_at) AS last_logged
+               FROM food_logs f
+               WHERE user_id = ?
+               GROUP BY food_name
+               ORDER BY last_logged DESC
+               LIMIT 20""",
+            (user_id,),
+        ).fetchall()
+    return jsonify([dict(r) for r in rows])
+
+
+@app.route("/api/voice-command", methods=["POST"])
+@login_required
+def api_voice_command():
+    data = request.get_json()
+    transcript = (data.get("text") or "").strip()
+    if not transcript:
+        return jsonify({"action": "unknown", "speak": "No speech detected. Please try again."}), 400
+
+    user_id = session["user_id"]
+    today   = date.today().isoformat()
+    logs    = get_today_logs(user_id)
+    profile = get_profile(user_id)
+    target  = profile["target_calories"] if profile else 2000
+    consumed = sum(l["calories"] for l in logs)
+
+    cmd = parse_voice_command(transcript, logs, target, consumed)
+    action = cmd.get("action", "unknown")
+
+    if action == "add_food":
+        food_name = (cmd.get("food_name") or "Unknown food").strip()
+        calories  = int(cmd.get("calories") or 0)
+        meal_type = cmd.get("meal_type", "snack")
+        protein_g = float(cmd.get("protein_g") or 0)
+        carbs_g   = float(cmd.get("carbs_g")   or 0)
+        fat_g     = float(cmd.get("fat_g")     or 0)
+
+        if calories <= 0:
+            return jsonify({"action": "error",
+                            "speak": "I need the calorie amount. Please include the calories in your command."})
+
+        with get_db() as db:
+            cursor = db.execute(
+                """INSERT INTO food_logs
+                   (user_id, date, meal_type, food_name, calories, protein_g, carbs_g, fat_g)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+                (user_id, today, meal_type, food_name, calories, protein_g, carbs_g, fat_g),
+            )
+            food_id = cursor.lastrowid
+
+        gami = process_meal_logged(user_id)
+        return jsonify({
+            "action":   "add_food",
+            "speak":    cmd.get("speak", f"Added {food_name} to your log."),
+            "log": {
+                "id": food_id, "food_name": food_name, "calories": calories,
+                "meal_type": meal_type, "protein_g": protein_g,
+                "carbs_g": carbs_g, "fat_g": fat_g,
+            },
+            **gami,
+        })
+
+    if action == "edit_food":
+        log_id    = int(cmd.get("log_id") or 0)
+        food_name = (cmd.get("food_name") or "").strip()
+        calories  = int(cmd.get("calories") or 0)
+        meal_type = cmd.get("meal_type", "snack")
+        protein_g = float(cmd.get("protein_g") or 0)
+        carbs_g   = float(cmd.get("carbs_g")   or 0)
+        fat_g     = float(cmd.get("fat_g")     or 0)
+
+        if log_id and food_name and calories > 0:
+            with get_db() as db:
+                db.execute(
+                    """UPDATE food_logs
+                       SET food_name=?, calories=?, protein_g=?, carbs_g=?, fat_g=?, meal_type=?
+                       WHERE id=? AND user_id=?""",
+                    (food_name, calories, protein_g, carbs_g, fat_g, meal_type, log_id, user_id),
+                )
+        return jsonify({
+            "action":  "edit_food",
+            "speak":   cmd.get("speak", f"Updated entry."),
+            "log_id":  log_id,
+            "log": {
+                "food_name": food_name, "calories": calories, "meal_type": meal_type,
+                "protein_g": protein_g, "carbs_g": carbs_g, "fat_g": fat_g,
+            },
+        })
+
+    if action == "delete_food":
+        log_id = int(cmd.get("log_id") or 0)
+        if log_id:
+            with get_db() as db:
+                db.execute("DELETE FROM food_logs WHERE id=? AND user_id=?", (log_id, user_id))
+        return jsonify({
+            "action": "delete_food",
+            "speak":  cmd.get("speak", "Entry removed."),
+            "log_id": log_id,
+        })
+
+    # query or unknown — just speak the response
+    return jsonify({"action": action, "speak": cmd.get("speak", "Done.")})
+
 
 @app.route("/api/username", methods=["POST"])
 @login_required

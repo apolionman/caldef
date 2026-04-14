@@ -519,7 +519,33 @@ input, select, textarea { font-family: var(--font); }
 
 /* Quick picks */
 .quick-picks { margin: 16px 0; }
+
+/* Tab bar */
+.quick-tab-bar {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.quick-tabs {
+  display: flex; gap: 2px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px; padding: 3px;
+}
+.quick-tab {
+  padding: 5px 14px; border-radius: 6px;
+  font-size: 13px; font-weight: 600;
+  color: var(--text-2); background: none; border: none; cursor: pointer;
+  transition: all 0.15s;
+}
+.quick-tab.active { background: var(--blue); color: white; }
+.quick-tab:not(.active):hover { background: var(--surface); color: var(--text-1); }
+
+.quick-panel { animation: fadeIn 0.15s var(--ease); }
+
 .quick-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* Base quick button */
 .quick-btn {
   padding: 8px 14px;
   background: var(--surface);
@@ -533,6 +559,24 @@ input, select, textarea { font-family: var(--font); }
 }
 .quick-btn span { font-size: 12px; color: var(--text-2); font-weight: 400; }
 .quick-btn:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-light); }
+.quick-btn:hover span { color: var(--blue); }
+
+/* Recent / My Foods button extras */
+.quick-btn-recent { border-radius: 10px; padding: 9px 12px; }
+.quick-meal-dot {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+}
+.quick-recent-name { flex: 1; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 180px; }
+.quick-recent-right { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+.quick-count {
+  font-size: 10px; font-weight: 700; color: var(--text-3);
+  background: var(--surface2); padding: 1px 5px; border-radius: 8px;
+}
+.quick-loading { font-size: 13px; color: var(--text-3); padding: 8px 0; }
+.quick-empty {
+  font-size: 13px; color: var(--text-2); padding: 16px 0;
+  text-align: center; width: 100%;
+}
 
 /* Log Table */
 .log-table { display: flex; flex-direction: column; }
@@ -893,6 +937,189 @@ input, select, textarea { font-family: var(--font); }
   border: none;
   border-top: 1px solid var(--border);
   margin: 12px 0;
+}
+
+
+/* ════════════════════════════════════════
+   VOICE COMMAND UI
+════════════════════════════════════════ */
+
+/* Floating action button */
+.voice-fab {
+  position: fixed;
+  right: 24px; bottom: 24px;
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue), #5856D6);
+  color: white;
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 20px rgba(0,122,255,0.4);
+  z-index: 300;
+  transition: transform 0.2s var(--ease), box-shadow 0.2s, background 0.2s;
+}
+.voice-fab svg { width: 22px; height: 22px; }
+.voice-fab:hover { transform: scale(1.08); box-shadow: 0 6px 28px rgba(0,122,255,0.55); }
+.voice-fab:active { transform: scale(0.96); }
+.voice-fab.listening {
+  background: linear-gradient(135deg, #FF3B30, #FF6961);
+  box-shadow: 0 4px 24px rgba(255,59,48,0.5);
+  animation: voiceFabPulse 1.4s ease-in-out infinite;
+}
+@keyframes voiceFabPulse {
+  0%, 100% { box-shadow: 0 4px 24px rgba(255,59,48,0.5); }
+  50%       { box-shadow: 0 4px 40px rgba(255,59,48,0.85), 0 0 0 10px rgba(255,59,48,0.12); }
+}
+
+/* Mobile: lift above bottom nav */
+@media (max-width: 640px) {
+  .voice-fab { right: 16px; bottom: calc(var(--bnav-h) + 16px); }
+}
+
+/* ── Voice overlay (full-screen dark backdrop) ── */
+.voice-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10,10,20,0.88);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  display: none; align-items: center; justify-content: center;
+  z-index: 700;
+  animation: none;
+}
+.voice-overlay.active {
+  display: flex;
+  animation: voiceOverlayIn 0.25s var(--ease);
+}
+@keyframes voiceOverlayIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.voice-overlay-close {
+  position: absolute; top: 28px; right: 28px;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  color: white; font-size: 24px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; border: none;
+  transition: background 0.15s;
+}
+.voice-overlay-close:hover { background: rgba(255,255,255,0.22); }
+
+/* ── Panel (centered content) ── */
+.voice-panel {
+  display: flex; flex-direction: column;
+  align-items: center; text-align: center;
+  padding: 32px 24px; max-width: 360px; width: 100%;
+  gap: 12px;
+}
+
+/* ── Animated orb ── */
+.voice-orb {
+  width: 112px; height: 112px; border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  position: relative;
+  margin-bottom: 4px;
+}
+.voice-orb svg { width: 44px; height: 44px; color: white; }
+.voice-orb::before, .voice-orb::after {
+  content: '';
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.15);
+  animation: none;
+}
+.voice-orb::after { inset: -14px; border-color: rgba(255,255,255,0.08); }
+
+/* Ready state */
+.voice-orb-ready   { background: rgba(255,255,255,0.12); }
+.voice-orb-ready:hover { background: rgba(255,255,255,0.2); transform: scale(1.04); }
+
+/* Listening state — pulsing blue rings */
+.voice-orb-listening { background: rgba(0,122,255,0.3); }
+.voice-orb-listening::before {
+  animation: voiceRing 1.4s ease-out infinite;
+}
+.voice-orb-listening::after {
+  animation: voiceRing 1.4s ease-out 0.5s infinite;
+}
+@keyframes voiceRing {
+  0%   { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* Processing — orange spin */
+.voice-orb-processing { background: rgba(255,149,0,0.3); }
+.voice-orb-processing::before {
+  border: 2px solid rgba(255,149,0,0.5);
+  animation: voiceSpin 1s linear infinite;
+}
+@keyframes voiceSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Speaking — green pulse */
+.voice-orb-speaking { background: rgba(52,199,89,0.3); }
+.voice-orb-speaking::before {
+  animation: voiceBeat 0.8s ease-in-out infinite alternate;
+}
+@keyframes voiceBeat {
+  from { transform: scale(1); opacity: 0.5; }
+  to   { transform: scale(1.4); opacity: 0.1; }
+}
+
+/* Error — red */
+.voice-orb-error { background: rgba(255,59,48,0.3); }
+
+/* ── Text elements ── */
+.voice-status {
+  font-size: 16px; font-weight: 600;
+  color: rgba(255,255,255,0.9);
+  letter-spacing: 0.01em;
+  min-height: 24px;
+}
+.voice-transcript {
+  font-size: 19px; font-weight: 500;
+  color: white; min-height: 28px;
+  line-height: 1.4;
+  transition: opacity 0.2s;
+}
+.voice-response {
+  font-size: 14px; color: rgba(255,255,255,0.7);
+  min-height: 20px; line-height: 1.5;
+  max-width: 300px;
+}
+.voice-hints {
+  display: flex; flex-direction: column; gap: 6px;
+  margin-top: 8px; width: 100%;
+}
+.voice-hints span {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px; padding: 7px 14px;
+  font-size: 12px; color: rgba(255,255,255,0.55);
+  font-style: italic;
+}
+
+/* ── Chat voice button ── */
+.chat-voice-btn {
+  width: 36px; height: 36px; flex-shrink: 0;
+  border-radius: 50%; background: var(--surface2);
+  color: var(--text-2); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.chat-voice-btn svg { width: 16px; height: 16px; }
+.chat-voice-btn:hover { background: var(--blue-light); color: var(--blue); }
+.chat-voice-btn.active {
+  background: linear-gradient(135deg, var(--blue), #5856D6);
+  color: white;
+  animation: voiceFabPulse 1.4s ease-in-out infinite;
+  box-shadow: 0 2px 12px rgba(0,122,255,0.4);
 }
 
 

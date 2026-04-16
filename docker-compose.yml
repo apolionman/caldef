@@ -11,6 +11,13 @@ services:
       # Change SECRET_KEY before deploying to production
       - SECRET_KEY=AAAsdk21djjc021i3AOJLFLLISOAID
       - DATABASE_PATH=/data/caldef.db
+      # Gmail SMTP — use an App Password (not your account password)
+      # Enable 2FA on Gmail, then generate at: myaccount.google.com/apppasswords
+      - SMTP_HOST=smtp.gmail.com
+      - SMTP_PORT=587
+      - SMTP_USER=hermesmonarch2@gmail.com
+      - SMTP_PASS=Qwaszx123!
+      - APP_URL=http://localhost:5050
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5050/')"]

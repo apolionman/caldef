@@ -1,0 +1,895 @@
+[
+    {
+        "label": "re",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "re",
+        "description": "re",
+        "detail": "re",
+        "documentation": {}
+    },
+    {
+        "label": "json",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "json",
+        "description": "json",
+        "detail": "json",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "date",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "timedelta",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "date",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "timedelta",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "requests",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "requests",
+        "description": "requests",
+        "detail": "requests",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "secrets",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "secrets",
+        "description": "secrets",
+        "detail": "secrets",
+        "documentation": {}
+    },
+    {
+        "label": "wraps",
+        "importPath": "functools",
+        "description": "functools",
+        "isExtraImport": true,
+        "detail": "functools",
+        "documentation": {}
+    },
+    {
+        "label": "Flask",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "render_template",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "request",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "redirect",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "url_for",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "session",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "jsonify",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "flash",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "generate_password_hash",
+        "importPath": "werkzeug.security",
+        "description": "werkzeug.security",
+        "isExtraImport": true,
+        "detail": "werkzeug.security",
+        "documentation": {}
+    },
+    {
+        "label": "check_password_hash",
+        "importPath": "werkzeug.security",
+        "description": "werkzeug.security",
+        "isExtraImport": true,
+        "detail": "werkzeug.security",
+        "documentation": {}
+    },
+    {
+        "label": "init_db",
+        "importPath": "database",
+        "description": "database",
+        "isExtraImport": true,
+        "detail": "database",
+        "documentation": {}
+    },
+    {
+        "label": "get_db",
+        "importPath": "database",
+        "description": "database",
+        "isExtraImport": true,
+        "detail": "database",
+        "documentation": {}
+    },
+    {
+        "label": "get_db",
+        "importPath": "database",
+        "description": "database",
+        "isExtraImport": true,
+        "detail": "database",
+        "documentation": {}
+    },
+    {
+        "label": "generate_plan",
+        "importPath": "ai_client",
+        "description": "ai_client",
+        "isExtraImport": true,
+        "detail": "ai_client",
+        "documentation": {}
+    },
+    {
+        "label": "get_daily_feedback",
+        "importPath": "ai_client",
+        "description": "ai_client",
+        "isExtraImport": true,
+        "detail": "ai_client",
+        "documentation": {}
+    },
+    {
+        "label": "chat_with_ai",
+        "importPath": "ai_client",
+        "description": "ai_client",
+        "isExtraImport": true,
+        "detail": "ai_client",
+        "documentation": {}
+    },
+    {
+        "label": "parse_voice_command",
+        "importPath": "ai_client",
+        "description": "ai_client",
+        "isExtraImport": true,
+        "detail": "ai_client",
+        "documentation": {}
+    },
+    {
+        "label": "send_password_reset",
+        "importPath": "email_utils",
+        "description": "email_utils",
+        "isExtraImport": true,
+        "detail": "email_utils",
+        "documentation": {}
+    },
+    {
+        "label": "process_meal_logged",
+        "importPath": "gamification",
+        "description": "gamification",
+        "isExtraImport": true,
+        "detail": "gamification",
+        "documentation": {}
+    },
+    {
+        "label": "process_weight_logged",
+        "importPath": "gamification",
+        "description": "gamification",
+        "isExtraImport": true,
+        "detail": "gamification",
+        "documentation": {}
+    },
+    {
+        "label": "process_feedback",
+        "importPath": "gamification",
+        "description": "gamification",
+        "isExtraImport": true,
+        "detail": "gamification",
+        "documentation": {}
+    },
+    {
+        "label": "process_ai_chat",
+        "importPath": "gamification",
+        "description": "gamification",
+        "isExtraImport": true,
+        "detail": "gamification",
+        "documentation": {}
+    },
+    {
+        "label": "get_user_stats",
+        "importPath": "gamification",
+        "description": "gamification",
+        "isExtraImport": true,
+        "detail": "gamification",
+        "documentation": {}
+    },
+    {
+        "label": "get_leaderboard",
+        "importPath": "gamification",
+        "description": "gamification",
+        "isExtraImport": true,
+        "detail": "gamification",
+        "documentation": {}
+    },
+    {
+        "label": "sqlite3",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "sqlite3",
+        "description": "sqlite3",
+        "detail": "sqlite3",
+        "documentation": {}
+    },
+    {
+        "label": "contextmanager",
+        "importPath": "contextlib",
+        "description": "contextlib",
+        "isExtraImport": true,
+        "detail": "contextlib",
+        "documentation": {}
+    },
+    {
+        "label": "smtplib",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "smtplib",
+        "description": "smtplib",
+        "detail": "smtplib",
+        "documentation": {}
+    },
+    {
+        "label": "ssl",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "ssl",
+        "description": "ssl",
+        "detail": "ssl",
+        "documentation": {}
+    },
+    {
+        "label": "MIMEText",
+        "importPath": "email.mime.text",
+        "description": "email.mime.text",
+        "isExtraImport": true,
+        "detail": "email.mime.text",
+        "documentation": {}
+    },
+    {
+        "label": "MIMEMultipart",
+        "importPath": "email.mime.multipart",
+        "description": "email.mime.multipart",
+        "isExtraImport": true,
+        "detail": "email.mime.multipart",
+        "documentation": {}
+    },
+    {
+        "label": "parse_voice_command",
+        "kind": 2,
+        "importPath": "ai_client",
+        "description": "ai_client",
+        "peekOfCode": "def parse_voice_command(transcript: str, today_logs: list,\n                        target_calories: int, today_consumed: int) -> dict:\n    \"\"\"Parse a voice transcript into a structured food-log action.\"\"\"\n    hour = _dt.now().hour\n    if hour < 10:\n        default_meal = \"breakfast\"\n    elif hour < 15:\n        default_meal = \"lunch\"\n    elif hour < 20:\n        default_meal = \"dinner\"",
+        "detail": "ai_client",
+        "documentation": {}
+    },
+    {
+        "label": "generate_plan",
+        "kind": 2,
+        "importPath": "ai_client",
+        "description": "ai_client",
+        "peekOfCode": "def generate_plan(profile: dict) -> str:\n    activity_desc = {\n        \"low\":      \"sedentary (little to no exercise)\",\n        \"moderate\": \"moderately active (light exercise 3-5 days/week)\",\n        \"high\":     \"very active (hard exercise 6-7 days/week)\",\n    }.get(profile[\"activity_level\"], \"moderately active\")\n    goal_desc = {\n        \"lose\":     \"lose weight (calorie deficit)\",\n        \"maintain\": \"maintain current weight\",\n        \"gain\":     \"gain weight/muscle (calorie surplus)\",",
+        "detail": "ai_client",
+        "documentation": {}
+    },
+    {
+        "label": "get_daily_feedback",
+        "kind": 2,
+        "importPath": "ai_client",
+        "description": "ai_client",
+        "peekOfCode": "def get_daily_feedback(profile: dict, username: str, consumed: int, logs: list) -> str:\n    target    = profile[\"target_calories\"]\n    remaining = target - consumed\n    meal_list = (\n        \", \".join(f\"{l['food_name']} ({l['calories']} kcal)\" for l in logs)\n        if logs else \"nothing logged yet\"\n    )\n    system = (\n        f\"You are a friendly, concise nutrition coach. \"\n        f\"Reply with 2–3 sentences of direct, warm feedback. \"",
+        "detail": "ai_client",
+        "documentation": {}
+    },
+    {
+        "label": "chat_with_ai",
+        "kind": 2,
+        "importPath": "ai_client",
+        "description": "ai_client",
+        "peekOfCode": "def chat_with_ai(profile: dict, username: str, history: list, user_message: str,\n                 today_consumed: int, today_logs: list) -> str:\n    target   = profile.get(\"target_calories\", 2000)\n    goal_desc = {\n        \"lose\": \"lose weight\", \"maintain\": \"maintain weight\", \"gain\": \"gain muscle\"\n    }.get(profile.get(\"goal\", \"maintain\"), \"maintain weight\")\n    meal_list = (\n        \", \".join(f\"{l['food_name']} ({l['calories']} kcal)\" for l in today_logs)\n        if today_logs else \"nothing logged yet\"\n    )",
+        "detail": "ai_client",
+        "documentation": {}
+    },
+    {
+        "label": "AI_ENDPOINT",
+        "kind": 5,
+        "importPath": "ai_client",
+        "description": "ai_client",
+        "peekOfCode": "AI_ENDPOINT = \"http://192.168.70.48:8000/v1/chat/completions\"\nAI_MODEL    = \"nvidia/Nemotron-Cascade-2-30B-A3B\"\n# Per-call timeouts (seconds)\nTIMEOUT_CHAT     = 120\nTIMEOUT_FEEDBACK = 120\nTIMEOUT_PLAN     = 300\nTIMEOUT_VOICE    = 30\n# ── Thinking-text detection ─────────────────────────────────────────────────\n# Paragraphs whose first word(s) indicate the model leaked its internal reasoning.\n_THINKING_PREFIXES = (",
+        "detail": "ai_client",
+        "documentation": {}
+    },
+    {
+        "label": "TIMEOUT_FEEDBACK",
+        "kind": 5,
+        "importPath": "ai_client",
+        "description": "ai_client",
+        "peekOfCode": "TIMEOUT_FEEDBACK = 120\nTIMEOUT_PLAN     = 300\nTIMEOUT_VOICE    = 30\n# ── Thinking-text detection ─────────────────────────────────────────────────\n# Paragraphs whose first word(s) indicate the model leaked its internal reasoning.\n_THINKING_PREFIXES = (\n    # Classic reasoning preambles\n    \"we need to\", \"i need to\", \"let me think\", \"let me \", \"let's think\",\n    \"let's do\", \"let's write\", \"let me write\", \"let me provide\",\n    \"okay so\", \"ok, \", \"ok so\", \"alright,\", \"alright so\",",
+        "detail": "ai_client",
+        "documentation": {}
+    },
+    {
+        "label": "_THINKING_PREFIXES",
+        "kind": 5,
+        "importPath": "ai_client",
+        "description": "ai_client",
+        "peekOfCode": "_THINKING_PREFIXES = (\n    # Classic reasoning preambles\n    \"we need to\", \"i need to\", \"let me think\", \"let me \", \"let's think\",\n    \"let's do\", \"let's write\", \"let me write\", \"let me provide\",\n    \"okay so\", \"ok, \", \"ok so\", \"alright,\", \"alright so\",\n    # Meta-commentary about the task\n    \"the user \", \"user wants\", \"user is asking\", \"so the user\",\n    \"the prompt:\", \"the goal is\", \"the task is\",\n    \"this is a request\", \"this should\", \"this response\",\n    \"response should\", \"we should respond\", \"i should respond\",",
+        "detail": "ai_client",
+        "documentation": {}
+    },
+    {
+        "label": "_TRANSITION_RE",
+        "kind": 5,
+        "importPath": "ai_client",
+        "description": "ai_client",
+        "peekOfCode": "_TRANSITION_RE = re.compile(\n    r\"(?:let'?s do[:\\s]+|here'?s? (?:the |my )?(?:response|message|answer|feedback)[:\\s]+|\"\n    r\"so,?\\s+here'?s?[:\\s]+|here you go[:\\s]+)\"\n    r\"[\\\"']?(.+)\",\n    re.IGNORECASE | re.DOTALL,\n)\ndef _strip_thinking(text: str) -> str:\n    \"\"\"Remove all chain-of-thought / planning text leaked by reasoning models.\"\"\"\n    # 1. Strip explicit <think>…</think> blocks (DeepSeek / Nemotron style)\n    text = re.sub(r\"<think>[\\s\\S]*?</think>\", \"\", text, flags=re.IGNORECASE).strip()",
+        "detail": "ai_client",
+        "documentation": {}
+    },
+    {
+        "label": "_NO_PREAMBLE",
+        "kind": 5,
+        "importPath": "ai_client",
+        "description": "ai_client",
+        "peekOfCode": "_NO_PREAMBLE = (\n    \"\\n\\nCRITICAL: Begin your reply immediately with the actual content. \"\n    \"Do NOT include any thinking, planning, reasoning steps, meta-commentary, \"\n    \"or notes about how you will respond. No preamble. No postamble.\"\n)\ndef _call_ai(messages: list, system_prompt: str = None, timeout: int = TIMEOUT_CHAT) -> str:\n    all_messages = []\n    if system_prompt:\n        all_messages.append({\"role\": \"system\", \"content\": system_prompt + _NO_PREAMBLE})\n    all_messages.extend(messages)",
+        "detail": "ai_client",
+        "documentation": {}
+    },
+    {
+        "label": "inject_now",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def inject_now():\n    return {\"now\": datetime.now}\n# ──────────────────────────────────────────────\n# Helpers\n# ──────────────────────────────────────────────\ndef login_required(f):\n    @wraps(f)\n    def decorated(*args, **kwargs):\n        if \"user_id\" not in session:\n            return redirect(url_for(\"landing\"))",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "login_required",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def login_required(f):\n    @wraps(f)\n    def decorated(*args, **kwargs):\n        if \"user_id\" not in session:\n            return redirect(url_for(\"landing\"))\n        return f(*args, **kwargs)\n    return decorated\ndef calc_bmr(weight_kg: float, height_cm: float, age: int, gender: str) -> float:\n    base = (10 * weight_kg) + (6.25 * height_cm) - (5 * age)\n    return base + 5 if gender == \"male\" else base - 161",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "calc_bmr",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def calc_bmr(weight_kg: float, height_cm: float, age: int, gender: str) -> float:\n    base = (10 * weight_kg) + (6.25 * height_cm) - (5 * age)\n    return base + 5 if gender == \"male\" else base - 161\ndef calc_tdee(bmr: float, activity: str) -> float:\n    multipliers = {\"low\": 1.2, \"moderate\": 1.55, \"high\": 1.725}\n    return bmr * multipliers.get(activity, 1.375)\ndef calc_target(tdee: float, goal: str) -> int:\n    if goal == \"lose\":\n        return max(1200, int(tdee - 500))\n    if goal == \"gain\":",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "calc_tdee",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def calc_tdee(bmr: float, activity: str) -> float:\n    multipliers = {\"low\": 1.2, \"moderate\": 1.55, \"high\": 1.725}\n    return bmr * multipliers.get(activity, 1.375)\ndef calc_target(tdee: float, goal: str) -> int:\n    if goal == \"lose\":\n        return max(1200, int(tdee - 500))\n    if goal == \"gain\":\n        return int(tdee + 300)\n    return int(tdee)\ndef get_profile(user_id: int):",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "calc_target",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def calc_target(tdee: float, goal: str) -> int:\n    if goal == \"lose\":\n        return max(1200, int(tdee - 500))\n    if goal == \"gain\":\n        return int(tdee + 300)\n    return int(tdee)\ndef get_profile(user_id: int):\n    with get_db() as db:\n        row = db.execute(\"SELECT * FROM profiles WHERE user_id = ?\", (user_id,)).fetchone()\n    return dict(row) if row else None",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "get_profile",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def get_profile(user_id: int):\n    with get_db() as db:\n        row = db.execute(\"SELECT * FROM profiles WHERE user_id = ?\", (user_id,)).fetchone()\n    return dict(row) if row else None\ndef get_today_logs(user_id: int):\n    today = date.today().isoformat()\n    with get_db() as db:\n        rows = db.execute(\n            \"SELECT * FROM food_logs WHERE user_id = ? AND date = ? ORDER BY logged_at ASC\",\n            (user_id, today)",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "get_today_logs",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def get_today_logs(user_id: int):\n    today = date.today().isoformat()\n    with get_db() as db:\n        rows = db.execute(\n            \"SELECT * FROM food_logs WHERE user_id = ? AND date = ? ORDER BY logged_at ASC\",\n            (user_id, today)\n        ).fetchall()\n    return [dict(r) for r in rows]\n# ──────────────────────────────────────────────\n# Auth",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "landing",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def landing():\n    if \"user_id\" in session:\n        return redirect(url_for(\"dashboard\"))\n    return render_template(\"landing.html\")\n@app.route(\"/register\", methods=[\"GET\", \"POST\"])\ndef register():\n    if request.method == \"POST\":\n        username = request.form.get(\"username\", \"\").strip()\n        email = request.form.get(\"email\", \"\").strip().lower()\n        password = request.form.get(\"password\", \"\")",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "register",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def register():\n    if request.method == \"POST\":\n        username = request.form.get(\"username\", \"\").strip()\n        email = request.form.get(\"email\", \"\").strip().lower()\n        password = request.form.get(\"password\", \"\")\n        if not username or not email or not password:\n            flash(\"All fields are required.\", \"error\")\n            return render_template(\"register.html\")\n        if len(password) < 6:\n            flash(\"Password must be at least 6 characters.\", \"error\")",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "login",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def login():\n    identifier = request.form.get(\"username\", \"\").strip()\n    password = request.form.get(\"password\", \"\")\n    with get_db() as db:\n        user = db.execute(\n            \"SELECT * FROM users WHERE username = ? OR email = ?\",\n            (identifier, identifier.lower()),\n        ).fetchone()\n    if user and check_password_hash(user[\"password_hash\"], password):\n        session[\"user_id\"] = user[\"id\"]",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "logout",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def logout():\n    session.clear()\n    return redirect(url_for(\"landing\"))\n@app.route(\"/forgot-password\", methods=[\"GET\", \"POST\"])\ndef forgot_password():\n    if request.method == \"POST\":\n        email = request.form.get(\"email\", \"\").strip().lower()\n        with get_db() as db:\n            user = db.execute(\n                \"SELECT id, username FROM users WHERE email = ?\", (email,)",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "forgot_password",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def forgot_password():\n    if request.method == \"POST\":\n        email = request.form.get(\"email\", \"\").strip().lower()\n        with get_db() as db:\n            user = db.execute(\n                \"SELECT id, username FROM users WHERE email = ?\", (email,)\n            ).fetchone()\n        if user:\n            token = secrets.token_urlsafe(32)\n            expires_at = (datetime.utcnow() + timedelta(hours=1)).isoformat()",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "reset_password",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def reset_password(token):\n    with get_db() as db:\n        row = db.execute(\n            \"\"\"SELECT pr.id, pr.user_id, pr.expires_at, pr.used\n               FROM password_resets pr\n               WHERE pr.token = ?\"\"\",\n            (token,),\n        ).fetchone()\n    if not row or row[\"used\"]:\n        flash(\"This reset link is invalid or has already been used.\", \"error\")",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "onboarding",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def onboarding():\n    if request.method == \"POST\":\n        try:\n            height_cm = float(request.form.get(\"height_cm\") or 170)\n            weight_kg = float(request.form.get(\"weight_kg\") or 70)\n            age = int(request.form.get(\"age\") or 25)\n            gender = request.form.get(\"gender\") or \"male\"\n            activity_level = request.form.get(\"activity_level\") or \"moderate\"\n            goal = request.form.get(\"goal\") or \"lose\"\n        except (ValueError, TypeError) as e:",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "dashboard",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def dashboard():\n    user_id = session[\"user_id\"]\n    profile = get_profile(user_id)\n    if not profile:\n        return redirect(url_for(\"onboarding\"))\n    logs = get_today_logs(user_id)\n    total_consumed = sum(log[\"calories\"] for log in logs)\n    total_protein = sum(log[\"protein_g\"] for log in logs)\n    total_carbs = sum(log[\"carbs_g\"] for log in logs)\n    total_fat = sum(log[\"fat_g\"] for log in logs)",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "api_feedback",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def api_feedback():\n    user_id = session[\"user_id\"]\n    profile = get_profile(user_id)\n    logs = get_today_logs(user_id)\n    consumed = sum(log[\"calories\"] for log in logs)\n    today = date.today().isoformat()\n    feedback = get_daily_feedback(profile, session[\"username\"], consumed, logs)\n    with get_db() as db:\n        db.execute(\n            \"\"\"INSERT INTO daily_feedback (user_id, date, feedback, total_calories)",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "log_food",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def log_food():\n    user_id = session[\"user_id\"]\n    profile = get_profile(user_id)\n    logs = get_today_logs(user_id)\n    total_consumed = sum(log[\"calories\"] for log in logs)\n    target = profile[\"target_calories\"] if profile else 2000\n    remaining = target - total_consumed\n    return render_template(\n        \"log_food.html\",\n        logs=logs,",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "api_add_food",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def api_add_food():\n    data = request.get_json()\n    user_id = session[\"user_id\"]\n    today = date.today().isoformat()\n    food_name = (data.get(\"food_name\") or \"\").strip()\n    calories = int(data.get(\"calories\", 0))\n    protein_g = float(data.get(\"protein_g\", 0))\n    carbs_g = float(data.get(\"carbs_g\", 0))\n    fat_g = float(data.get(\"fat_g\", 0))\n    meal_type = data.get(\"meal_type\", \"meal\")",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "api_edit_food",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def api_edit_food(food_id):\n    data = request.get_json()\n    user_id = session[\"user_id\"]\n    food_name = (data.get(\"food_name\") or \"\").strip()\n    calories = int(data.get(\"calories\", 0))\n    protein_g = float(data.get(\"protein_g\", 0))\n    carbs_g = float(data.get(\"carbs_g\", 0))\n    fat_g = float(data.get(\"fat_g\", 0))\n    meal_type = data.get(\"meal_type\", \"meal\")\n    if not food_name or calories <= 0:",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "api_delete_food",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def api_delete_food(food_id):\n    with get_db() as db:\n        db.execute(\n            \"DELETE FROM food_logs WHERE id = ? AND user_id = ?\",\n            (food_id, session[\"user_id\"]),\n        )\n    return jsonify({\"success\": True})\n@app.route(\"/api/today\")\n@login_required\ndef api_today():",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "api_today",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def api_today():\n    user_id = session[\"user_id\"]\n    profile = get_profile(user_id)\n    logs = get_today_logs(user_id)\n    consumed = sum(log[\"calories\"] for log in logs)\n    target = profile[\"target_calories\"] if profile else 2000\n    return jsonify({\n        \"consumed\": consumed,\n        \"target\": target,\n        \"remaining\": target - consumed,",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "chat",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def chat():\n    user_id = session[\"user_id\"]\n    with get_db() as db:\n        rows = db.execute(\n            \"SELECT role, content, created_at FROM chat_messages WHERE user_id = ? ORDER BY created_at DESC LIMIT 50\",\n            (user_id,)\n        ).fetchall()\n    messages = list(reversed([dict(r) for r in rows]))\n    return render_template(\"chat.html\", messages=messages)\n@app.route(\"/api/chat\", methods=[\"POST\"])",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "api_chat",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def api_chat():\n    data = request.get_json()\n    user_message = (data.get(\"message\") or \"\").strip()\n    if not user_message:\n        return jsonify({\"error\": \"Message is required.\"}), 400\n    user_id = session[\"user_id\"]\n    profile = get_profile(user_id)\n    logs = get_today_logs(user_id)\n    consumed = sum(log[\"calories\"] for log in logs)\n    with get_db() as db:",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "history",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def history():\n    return render_template(\"history.html\")\n@app.route(\"/api/history\")\n@login_required\ndef api_history():\n    user_id = session[\"user_id\"]\n    days = int(request.args.get(\"days\", 30))\n    start = (date.today() - timedelta(days=days)).isoformat()\n    with get_db() as db:\n        rows = db.execute(",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "api_history",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def api_history():\n    user_id = session[\"user_id\"]\n    days = int(request.args.get(\"days\", 30))\n    start = (date.today() - timedelta(days=days)).isoformat()\n    with get_db() as db:\n        rows = db.execute(\n            \"\"\"SELECT date, SUM(calories) as total,\n               SUM(protein_g) as protein, SUM(carbs_g) as carbs, SUM(fat_g) as fat,\n               COUNT(*) as entries\n               FROM food_logs WHERE user_id = ? AND date >= ?",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "api_log_weight",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def api_log_weight():\n    data = request.get_json()\n    weight_kg = float(data.get(\"weight_kg\", 0))\n    if weight_kg <= 0:\n        return jsonify({\"error\": \"Invalid weight.\"}), 400\n    today = date.today().isoformat()\n    with get_db() as db:\n        db.execute(\n            \"\"\"INSERT INTO weight_logs (user_id, date, weight_kg)\n               VALUES (?, ?, ?)",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "api_recent_foods",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def api_recent_foods():\n    user_id = session[\"user_id\"]\n    with get_db() as db:\n        rows = db.execute(\n            \"\"\"SELECT food_name,\n                      ROUND(AVG(calories))   AS calories,\n                      ROUND(AVG(protein_g),1) AS protein_g,\n                      ROUND(AVG(carbs_g),1)   AS carbs_g,\n                      ROUND(AVG(fat_g),1)     AS fat_g,\n                      (SELECT meal_type FROM food_logs f2",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "api_voice_command",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def api_voice_command():\n    data = request.get_json()\n    transcript = (data.get(\"text\") or \"\").strip()\n    if not transcript:\n        return jsonify({\"action\": \"unknown\", \"speak\": \"No speech detected. Please try again.\"}), 400\n    user_id = session[\"user_id\"]\n    today   = date.today().isoformat()\n    logs    = get_today_logs(user_id)\n    profile = get_profile(user_id)\n    target  = profile[\"target_calories\"] if profile else 2000",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "api_change_username",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def api_change_username():\n    data = request.get_json()\n    new_username = (data.get(\"username\") or \"\").strip()\n    if len(new_username) < 3:\n        return jsonify({\"error\": \"Username must be at least 3 characters.\"}), 400\n    if len(new_username) > 30:\n        return jsonify({\"error\": \"Username must be 30 characters or fewer.\"}), 400\n    try:\n        with get_db() as db:\n            db.execute(\"UPDATE users SET username=? WHERE id=?\",",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "api_stats",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def api_stats():\n    return jsonify(get_user_stats(session[\"user_id\"]))\n@app.route(\"/leaderboard\")\n@login_required\ndef leaderboard():\n    board = get_leaderboard()\n    my_stats = get_user_stats(session[\"user_id\"])\n    return render_template(\"leaderboard.html\", board=board,\n                           my_id=session[\"user_id\"], my_stats=my_stats)\n# ──────────────────────────────────────────────",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "leaderboard",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def leaderboard():\n    board = get_leaderboard()\n    my_stats = get_user_stats(session[\"user_id\"])\n    return render_template(\"leaderboard.html\", board=board,\n                           my_id=session[\"user_id\"], my_stats=my_stats)\n# ──────────────────────────────────────────────\n# Profile\n# ──────────────────────────────────────────────\n@app.route(\"/profile\", methods=[\"GET\", \"POST\"])\n@login_required",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "profile",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def profile():\n    user_id = session[\"user_id\"]\n    if request.method == \"POST\":\n        height_cm = float(request.form.get(\"height_cm\", 170))\n        weight_kg = float(request.form.get(\"weight_kg\", 70))\n        age = int(request.form.get(\"age\", 25))\n        gender = request.form.get(\"gender\", \"male\")\n        activity_level = request.form.get(\"activity_level\", \"moderate\")\n        goal = request.form.get(\"goal\", \"lose\")\n        bmr = calc_bmr(weight_kg, height_cm, age, gender)",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "api_regenerate_plan",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def api_regenerate_plan():\n    user_id = session[\"user_id\"]\n    profile = get_profile(user_id)\n    if not profile:\n        return jsonify({\"error\": \"No profile found.\"}), 404\n    plan_text = generate_plan(profile)\n    with get_db() as db:\n        db.execute(\n            \"UPDATE profiles SET plan_text=?, updated_at=CURRENT_TIMESTAMP WHERE user_id=?\",\n            (plan_text, user_id),",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "app",
+        "kind": 5,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "app = Flask(__name__)\napp.secret_key = os.environ.get(\"SECRET_KEY\", \"caldef-apple-inspired-secret-2024\")\n@app.context_processor\ndef inject_now():\n    return {\"now\": datetime.now}\n# ──────────────────────────────────────────────\n# Helpers\n# ──────────────────────────────────────────────\ndef login_required(f):\n    @wraps(f)",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "app.secret_key",
+        "kind": 5,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "app.secret_key = os.environ.get(\"SECRET_KEY\", \"caldef-apple-inspired-secret-2024\")\n@app.context_processor\ndef inject_now():\n    return {\"now\": datetime.now}\n# ──────────────────────────────────────────────\n# Helpers\n# ──────────────────────────────────────────────\ndef login_required(f):\n    @wraps(f)\n    def decorated(*args, **kwargs):",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "init_db",
+        "kind": 2,
+        "importPath": "database",
+        "description": "database",
+        "peekOfCode": "def init_db():\n    with get_db() as db:\n        db.executescript(\"\"\"\n            CREATE TABLE IF NOT EXISTS users (\n                id INTEGER PRIMARY KEY AUTOINCREMENT,\n                username TEXT UNIQUE NOT NULL,\n                email TEXT UNIQUE NOT NULL,\n                password_hash TEXT NOT NULL,\n                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n            );",
+        "detail": "database",
+        "documentation": {}
+    },
+    {
+        "label": "get_db",
+        "kind": 2,
+        "importPath": "database",
+        "description": "database",
+        "peekOfCode": "def get_db():\n    conn = sqlite3.connect(DATABASE)\n    conn.row_factory = sqlite3.Row\n    try:\n        yield conn\n        conn.commit()\n    except Exception:\n        conn.rollback()\n        raise\n    finally:",
+        "detail": "database",
+        "documentation": {}
+    },
+    {
+        "label": "DATABASE",
+        "kind": 5,
+        "importPath": "database",
+        "description": "database",
+        "peekOfCode": "DATABASE = os.environ.get(\"DATABASE_PATH\", \"caldef.db\")\ndef init_db():\n    with get_db() as db:\n        db.executescript(\"\"\"\n            CREATE TABLE IF NOT EXISTS users (\n                id INTEGER PRIMARY KEY AUTOINCREMENT,\n                username TEXT UNIQUE NOT NULL,\n                email TEXT UNIQUE NOT NULL,\n                password_hash TEXT NOT NULL,\n                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
+        "detail": "database",
+        "documentation": {}
+    },
+    {
+        "label": "send_password_reset",
+        "kind": 2,
+        "importPath": "email_utils",
+        "description": "email_utils",
+        "peekOfCode": "def send_password_reset(to_email: str, username: str, token: str) -> bool:\n    if not SMTP_USER or not SMTP_PASS:\n        return False\n    reset_url = f\"{APP_URL}/reset-password/{token}\"\n    html = f\"\"\"\n    <div style=\"font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;background:#fff;border-radius:16px;\">\n      <h2 style=\"font-size:22px;font-weight:700;color:#1a1a1a;margin:0 0 8px;\">Reset your password</h2>\n      <p style=\"color:#555;font-size:15px;line-height:1.5;margin:0 0 24px;\">\n        Hi {username}, we received a request to reset your CalDef password.\n        Click the button below — this link expires in <strong>1 hour</strong>.",
+        "detail": "email_utils",
+        "documentation": {}
+    },
+    {
+        "label": "SMTP_HOST",
+        "kind": 5,
+        "importPath": "email_utils",
+        "description": "email_utils",
+        "peekOfCode": "SMTP_HOST = os.environ.get(\"SMTP_HOST\", \"smtp.gmail.com\")\nSMTP_PORT = int(os.environ.get(\"SMTP_PORT\", 587))\nSMTP_USER = os.environ.get(\"SMTP_USER\", \"\")\nSMTP_PASS = os.environ.get(\"SMTP_PASS\", \"\")\nAPP_URL   = os.environ.get(\"APP_URL\", \"http://localhost:5050\")\ndef send_password_reset(to_email: str, username: str, token: str) -> bool:\n    if not SMTP_USER or not SMTP_PASS:\n        return False\n    reset_url = f\"{APP_URL}/reset-password/{token}\"\n    html = f\"\"\"",
+        "detail": "email_utils",
+        "documentation": {}
+    },
+    {
+        "label": "SMTP_PORT",
+        "kind": 5,
+        "importPath": "email_utils",
+        "description": "email_utils",
+        "peekOfCode": "SMTP_PORT = int(os.environ.get(\"SMTP_PORT\", 587))\nSMTP_USER = os.environ.get(\"SMTP_USER\", \"\")\nSMTP_PASS = os.environ.get(\"SMTP_PASS\", \"\")\nAPP_URL   = os.environ.get(\"APP_URL\", \"http://localhost:5050\")\ndef send_password_reset(to_email: str, username: str, token: str) -> bool:\n    if not SMTP_USER or not SMTP_PASS:\n        return False\n    reset_url = f\"{APP_URL}/reset-password/{token}\"\n    html = f\"\"\"\n    <div style=\"font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;background:#fff;border-radius:16px;\">",
+        "detail": "email_utils",
+        "documentation": {}
+    },
+    {
+        "label": "SMTP_USER",
+        "kind": 5,
+        "importPath": "email_utils",
+        "description": "email_utils",
+        "peekOfCode": "SMTP_USER = os.environ.get(\"SMTP_USER\", \"\")\nSMTP_PASS = os.environ.get(\"SMTP_PASS\", \"\")\nAPP_URL   = os.environ.get(\"APP_URL\", \"http://localhost:5050\")\ndef send_password_reset(to_email: str, username: str, token: str) -> bool:\n    if not SMTP_USER or not SMTP_PASS:\n        return False\n    reset_url = f\"{APP_URL}/reset-password/{token}\"\n    html = f\"\"\"\n    <div style=\"font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;background:#fff;border-radius:16px;\">\n      <h2 style=\"font-size:22px;font-weight:700;color:#1a1a1a;margin:0 0 8px;\">Reset your password</h2>",
+        "detail": "email_utils",
+        "documentation": {}
+    },
+    {
+        "label": "SMTP_PASS",
+        "kind": 5,
+        "importPath": "email_utils",
+        "description": "email_utils",
+        "peekOfCode": "SMTP_PASS = os.environ.get(\"SMTP_PASS\", \"\")\nAPP_URL   = os.environ.get(\"APP_URL\", \"http://localhost:5050\")\ndef send_password_reset(to_email: str, username: str, token: str) -> bool:\n    if not SMTP_USER or not SMTP_PASS:\n        return False\n    reset_url = f\"{APP_URL}/reset-password/{token}\"\n    html = f\"\"\"\n    <div style=\"font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;background:#fff;border-radius:16px;\">\n      <h2 style=\"font-size:22px;font-weight:700;color:#1a1a1a;margin:0 0 8px;\">Reset your password</h2>\n      <p style=\"color:#555;font-size:15px;line-height:1.5;margin:0 0 24px;\">",
+        "detail": "email_utils",
+        "documentation": {}
+    },
+    {
+        "label": "get_level",
+        "kind": 2,
+        "importPath": "gamification",
+        "description": "gamification",
+        "peekOfCode": "def get_level(points: int) -> dict:\n    level = LEVELS[0]\n    for entry in LEVELS:\n        if points >= entry[0]:\n            level = entry\n    next_threshold = None\n    for entry in LEVELS:\n        if points < entry[0]:\n            next_threshold = entry[0]\n            break",
+        "detail": "gamification",
+        "documentation": {}
+    },
+    {
+        "label": "process_meal_logged",
+        "kind": 2,
+        "importPath": "gamification",
+        "description": "gamification",
+        "peekOfCode": "def process_meal_logged(user_id: int) -> dict:\n    _ensure_row(user_id)\n    today = date.today().isoformat()\n    _add_points(user_id, 10)\n    streak = _update_streak(user_id)\n    earned = []\n    with get_db() as db:\n        total_meals = db.execute(\n            \"SELECT COUNT(*) as c FROM food_logs WHERE user_id = ?\", (user_id,)\n        ).fetchone()[\"c\"]",
+        "detail": "gamification",
+        "documentation": {}
+    },
+    {
+        "label": "process_weight_logged",
+        "kind": 2,
+        "importPath": "gamification",
+        "description": "gamification",
+        "peekOfCode": "def process_weight_logged(user_id: int, new_weight: float) -> dict:\n    _ensure_row(user_id)\n    # Only award base points once per day\n    today = date.today().isoformat()\n    with get_db() as db:\n        already_today = db.execute(\n            \"SELECT COUNT(*) as c FROM weight_logs WHERE user_id = ? AND date = ? AND date < ?\",\n            (user_id, today, today),\n        ).fetchone()[\"c\"]\n        total_logs = db.execute(",
+        "detail": "gamification",
+        "documentation": {}
+    },
+    {
+        "label": "process_feedback",
+        "kind": 2,
+        "importPath": "gamification",
+        "description": "gamification",
+        "peekOfCode": "def process_feedback(user_id: int, consumed: int, target: int) -> dict:\n    _ensure_row(user_id)\n    on_target = consumed <= target\n    pts = 10 + (50 if on_target else 0)\n    _add_points(user_id, pts)\n    streak = _update_streak(user_id)\n    earned = []\n    if on_target:\n        with get_db() as db:\n            days_on_target = db.execute(",
+        "detail": "gamification",
+        "documentation": {}
+    },
+    {
+        "label": "process_ai_chat",
+        "kind": 2,
+        "importPath": "gamification",
+        "description": "gamification",
+        "peekOfCode": "def process_ai_chat(user_id: int) -> dict:\n    _ensure_row(user_id)\n    _add_points(user_id, 15)\n    streak = _update_streak(user_id)\n    earned = []\n    with get_db() as db:\n        chat_count = db.execute(\n            \"SELECT COUNT(*) as c FROM chat_messages WHERE user_id = ? AND role = 'user'\",\n            (user_id,),\n        ).fetchone()[\"c\"]",
+        "detail": "gamification",
+        "documentation": {}
+    },
+    {
+        "label": "get_user_stats",
+        "kind": 2,
+        "importPath": "gamification",
+        "description": "gamification",
+        "peekOfCode": "def get_user_stats(user_id: int) -> dict:\n    _ensure_row(user_id)\n    with get_db() as db:\n        pts_row = db.execute(\n            \"SELECT total_points, current_streak, longest_streak FROM user_points WHERE user_id = ?\",\n            (user_id,),\n        ).fetchone()\n        earned_rows = db.execute(\n            \"SELECT achievement_key, earned_at FROM achievements WHERE user_id = ? ORDER BY earned_at DESC\",\n            (user_id,),",
+        "detail": "gamification",
+        "documentation": {}
+    },
+    {
+        "label": "get_leaderboard",
+        "kind": 2,
+        "importPath": "gamification",
+        "description": "gamification",
+        "peekOfCode": "def get_leaderboard(limit: int = 50) -> list:\n    with get_db() as db:\n        rows = db.execute(\n            \"\"\"SELECT u.id, u.username,\n                      COALESCE(up.total_points, 0)   AS total_points,\n                      COALESCE(up.current_streak, 0) AS current_streak,\n                      COALESCE(up.longest_streak, 0) AS longest_streak,\n                      (SELECT COUNT(*) FROM achievements a WHERE a.user_id = u.id) AS achievement_count\n               FROM users u\n               LEFT JOIN user_points up ON up.user_id = u.id",
+        "detail": "gamification",
+        "documentation": {}
+    },
+    {
+        "label": "ACHIEVEMENTS",
+        "kind": 5,
+        "importPath": "gamification",
+        "description": "gamification",
+        "peekOfCode": "ACHIEVEMENTS = {\n    # Logging milestones\n    \"first_log\":     {\"name\": \"First Step\",       \"icon\": \"⭐\", \"desc\": \"Logged your very first meal\",             \"points\": 50},\n    \"meals_10\":      {\"name\": \"Getting Into It\",  \"icon\": \"📋\", \"desc\": \"Logged 10 meals total\",                  \"points\": 75},\n    \"meals_50\":      {\"name\": \"Committed\",         \"icon\": \"📊\", \"desc\": \"Logged 50 meals total\",                  \"points\": 150},\n    \"meals_100\":     {\"name\": \"Data Lover\",        \"icon\": \"🗂️\", \"desc\": \"Logged 100 meals total\",                 \"points\": 300},\n    \"meals_250\":     {\"name\": \"Obsessed (Nice)\",   \"icon\": \"🏅\", \"desc\": \"Logged 250 meals total\",                 \"points\": 500},\n    # Streaks\n    \"streak_3\":      {\"name\": \"On a Roll\",         \"icon\": \"🔥\", \"desc\": \"3-day activity streak\",                  \"points\": 75},\n    \"streak_7\":      {\"name\": \"On Fire\",           \"icon\": \"🔥\", \"desc\": \"7-day activity streak\",                  \"points\": 200},",
+        "detail": "gamification",
+        "documentation": {}
+    },
+    {
+        "label": "LEVELS",
+        "kind": 5,
+        "importPath": "gamification",
+        "description": "gamification",
+        "peekOfCode": "LEVELS = [\n    (0,      \"Bronze\",   \"#CD7F32\", \"🥉\"),\n    (500,    \"Silver\",   \"#8E8E93\", \"🥈\"),\n    (1500,   \"Gold\",     \"#FFD700\", \"🥇\"),\n    (4000,   \"Platinum\", \"#5AC8FA\", \"💎\"),\n    (10000,  \"Diamond\",  \"#AF52DE\", \"👑\"),\n]\ndef get_level(points: int) -> dict:\n    level = LEVELS[0]\n    for entry in LEVELS:",
+        "detail": "gamification",
+        "documentation": {}
+    }
+]

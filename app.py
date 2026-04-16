@@ -1,4 +1,5 @@
 import os
+import secrets
 from datetime import datetime, date, timedelta
 from functools import wraps
 from flask import (
@@ -8,6 +9,7 @@ from flask import (
 from werkzeug.security import generate_password_hash, check_password_hash
 from database import init_db, get_db
 from ai_client import generate_plan, get_daily_feedback, chat_with_ai, parse_voice_command
+from email_utils import send_password_reset
 from gamification import (
     process_meal_logged, process_weight_logged,
     process_feedback, process_ai_chat,
@@ -136,6 +138,76 @@ def login():
 def logout():
     session.clear()
     return redirect(url_for("landing"))
+
+
+@app.route("/forgot-password", methods=["GET", "POST"])
+def forgot_password():
+    if request.method == "POST":
+        email = request.form.get("email", "").strip().lower()
+        with get_db() as db:
+            user = db.execute(
+                "SELECT id, username FROM users WHERE email = ?", (email,)
+            ).fetchone()
+
+        if user:
+            token = secrets.token_urlsafe(32)
+            expires_at = (datetime.utcnow() + timedelta(hours=1)).isoformat()
+            with get_db() as db:
+                db.execute(
+                    "INSERT INTO password_resets (user_id, token, expires_at) VALUES (?, ?, ?)",
+                    (user["id"], token, expires_at),
+                )
+            send_password_reset(email, user["username"], token)
+
+        # Always show success to avoid email enumeration
+        flash("If that email is registered, a reset link has been sent.", "success")
+        return redirect(url_for("forgot_password"))
+
+    return render_template("forgot_password.html")
+
+
+@app.route("/reset-password/<token>", methods=["GET", "POST"])
+def reset_password(token):
+    with get_db() as db:
+        row = db.execute(
+            """SELECT pr.id, pr.user_id, pr.expires_at, pr.used
+               FROM password_resets pr
+               WHERE pr.token = ?""",
+            (token,),
+        ).fetchone()
+
+    if not row or row["used"]:
+        flash("This reset link is invalid or has already been used.", "error")
+        return redirect(url_for("forgot_password"))
+
+    if datetime.utcnow() > datetime.fromisoformat(row["expires_at"]):
+        flash("This reset link has expired. Please request a new one.", "error")
+        return redirect(url_for("forgot_password"))
+
+    if request.method == "POST":
+        password = request.form.get("password", "")
+        confirm  = request.form.get("confirm", "")
+
+        if len(password) < 6:
+            flash("Password must be at least 6 characters.", "error")
+            return render_template("reset_password.html", token=token)
+        if password != confirm:
+            flash("Passwords do not match.", "error")
+            return render_template("reset_password.html", token=token)
+
+        with get_db() as db:
+            db.execute(
+                "UPDATE users SET password_hash = ? WHERE id = ?",
+                (generate_password_hash(password), row["user_id"]),
+            )
+            db.execute(
+                "UPDATE password_resets SET used = 1 WHERE token = ?", (token,)
+            )
+
+        flash("Password updated! You can now sign in.", "success")
+        return redirect(url_for("landing"))
+
+    return render_template("reset_password.html", token=token)
 
 
 # ──────────────────────────────────────────────
